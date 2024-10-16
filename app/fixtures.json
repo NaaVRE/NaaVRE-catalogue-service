@@ -1,0 +1,202 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "password": "",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "test-user-1",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-10-16T13:05:25.378Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "base_assets.baseasset",
+    "pk": "293f1c6e-971b-44e2-adb3-c335ec2b17c1",
+    "fields": {
+      "title": "test-workflow-1",
+      "description": "",
+      "created": "2024-10-16T13:14:21.303Z",
+      "modified": "2024-10-16T13:14:21.303Z",
+      "owner": 2,
+      "virtual_lab": "test-virtual-lab-1"
+    }
+  },
+  {
+    "model": "base_assets.baseasset",
+    "pk": "b2668e85-d813-40e7-b4a1-803764f7c653",
+    "fields": {
+      "title": "test-cell-1",
+      "description": "",
+      "created": "2024-10-16T13:13:54.482Z",
+      "modified": "2024-10-16T13:13:54.482Z",
+      "owner": 2,
+      "virtual_lab": "test-virtual-lab-1"
+    }
+  },
+  {
+    "model": "virtual_labs.virtuallab",
+    "pk": "test-virtual-lab-1",
+    "fields": {
+      "title": "test-virtual-lab-1",
+      "description": "",
+      "created": "2024-10-16T13:05:39.474Z",
+      "modified": "2024-10-16T13:05:39.474Z",
+      "deployment_url": "",
+      "container_image": ""
+    }
+  },
+  {
+    "model": "workflow_cells.baseimage",
+    "pk": 1,
+    "fields": {
+      "build": "test-build-1",
+      "runtime": "test-runtime-1"
+    }
+  },
+  {
+    "model": "workflow_cells.dependency",
+    "pk": 1,
+    "fields": {
+      "name": "test-dependency-1",
+      "module": "",
+      "asname": ""
+    }
+  },
+  {
+    "model": "workflow_cells.dependency",
+    "pk": 2,
+    "fields": {
+      "name": "test-dependency-2",
+      "module": "test-dependency-2-module",
+      "asname": ""
+    }
+  },
+  {
+    "model": "workflow_cells.dependency",
+    "pk": 3,
+    "fields": {
+      "name": "test-dependency-3",
+      "module": "",
+      "asname": "test-dependency-3-asname"
+    }
+  },
+  {
+    "model": "workflow_cells.dependency",
+    "pk": 4,
+    "fields": {
+      "name": "test-dependency-4",
+      "module": "test-dependency-4-module",
+      "asname": "test-dependency-4-asname"
+    }
+  },
+  {
+    "model": "workflow_cells.basevariable",
+    "pk": 1,
+    "fields": {
+      "name": "test-output-1",
+      "type": "int"
+    }
+  },
+  {
+    "model": "workflow_cells.basevariable",
+    "pk": 2,
+    "fields": {
+      "name": "test-input-1",
+      "type": "float"
+    }
+  },
+  {
+    "model": "workflow_cells.basevariable",
+    "pk": 3,
+    "fields": {
+      "name": "test_param_1",
+      "type": "str"
+    }
+  },
+  {
+    "model": "workflow_cells.basevariable",
+    "pk": 4,
+    "fields": {
+      "name": "test-secret-1",
+      "type": "str"
+    }
+  },
+  {
+    "model": "workflow_cells.input",
+    "pk": 2,
+    "fields": {}
+  },
+  {
+    "model": "workflow_cells.output",
+    "pk": 1,
+    "fields": {}
+  },
+  {
+    "model": "workflow_cells.conf",
+    "pk": 1,
+    "fields": {
+      "name": "test_conf_1",
+      "assignation": "test_conf_1 = 'abc'"
+    }
+  },
+  {
+    "model": "workflow_cells.param",
+    "pk": 3,
+    "fields": {
+      "default_value": "\"test\""
+    }
+  },
+  {
+    "model": "workflow_cells.secret",
+    "pk": 4,
+    "fields": {}
+  },
+  {
+    "model": "workflow_cells.cell",
+    "pk": "b2668e85-d813-40e7-b4a1-803764f7c653",
+    "fields": {
+      "container_image": "test-image-1",
+      "base_container_image": null,
+      "kernel": "",
+      "source_url": "",
+      "dependencies": [
+        1,
+        2,
+        3
+      ],
+      "inputs": [
+        2
+      ],
+      "outputs": [
+        1
+      ],
+      "confs": [
+        1
+      ],
+      "params": [
+        3
+      ],
+      "secrets": [
+        4
+      ]
+    }
+  },
+  {
+    "model": "workflows.workflow",
+    "pk": "293f1c6e-971b-44e2-adb3-c335ec2b17c1",
+    "fields": {
+      "source_url": "",
+      "run_url": "",
+      "status": "",
+      "progress": ""
+    }
+  }
+]
