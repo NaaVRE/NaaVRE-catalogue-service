@@ -1,17 +1,16 @@
-from typing import Union
 import logging
 import os
 import ssl
-
-import jwt
-import requests
+from typing import Union
 
 from django.contrib.auth.models import User
-from rest_framework.exceptions import AuthenticationFailed
+import jwt
+import requests
 from rest_framework.authentication import (
     BaseAuthentication,
     get_authorization_header,
     )
+from rest_framework.exceptions import AuthenticationFailed
 
 from .models import OIDCUser
 
@@ -76,17 +75,9 @@ class OIDCAccessTokenBearerAuthentication(BaseAuthentication):
 
         user = self.get_user(token)
 
-        print('@@@@@@', user)
-
         return user, token
 
     def validate_token(self, access_token):
-        if os.getenv('DISABLE_AUTH', 'false').lower() == 'true':
-            fake_data = {
-                'sub': '00000000-0000-0000-0000-000000000000',
-                'preferred_username': 'tests',
-                }
-            return fake_data
         url = self.openid_conf['jwks_uri']
         jwks_client = jwt.PyJWKClient(url, ssl_context=self.ssl_context)
 
@@ -105,13 +96,41 @@ class OIDCAccessTokenBearerAuthentication(BaseAuthentication):
             raise
         return data
 
+    @staticmethod
+    def validate_fake_token(access_token):
+        """ Validate fake token for testing purpose
+
+        This expects a jwt token using the HMAC+SHA (HS) algorithm and the
+        secret 'fake-secret'
+        """
+        token_header = jwt.get_unverified_header(access_token)
+        try:
+            data = jwt.decode(
+                access_token,
+                'fake-secret',
+                algorithms=[token_header['alg']],
+                audience="account",
+                options={"verify_exp": True},
+                )
+        except jwt.exceptions.InvalidTokenError as e:
+            logger.debug(msg="Authentication failed", exc_info=e)
+            raise
+        return data
+
     def get_user(self, token):
-        data = self.validate_token(token)
+        if os.getenv('DISABLE_AUTH', 'false').lower() == 'true':
+            data = self.validate_fake_token(token)
+        else:
+            data = self.validate_token(token)
         uid = str(data['sub'])
         try:
             oidc_user = OIDCUser.objects.select_related('user').get(uid=uid)
             user = oidc_user.user
         except OIDCUser.DoesNotExist:
+            if User.objects.filter(username=data.get('preferred_username')):
+                msg = ('Cannot create User. A User with this username already '
+                       'exists, but it is not linked to the token\'s OIDCUser')
+                raise AuthenticationFailed(msg)
             user = User(username=data.get('preferred_username'))
             user.save()
             oidc_user = OIDCUser(uid=uid, user=user)
