@@ -1,7 +1,7 @@
-from oidc_jwt_auth.authentication import OIDCAccessTokenBearerAuthentication
 from rest_framework import permissions
 from rest_framework import viewsets
 
+from oidc_jwt_auth.authentication import OIDCAccessTokenBearerAuthentication
 from . import models
 from . import serializers
 

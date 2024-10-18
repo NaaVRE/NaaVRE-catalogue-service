@@ -1,11 +1,11 @@
 from django.db import models
-from oidc_jwt_auth.authentication import OIDCAccessTokenBearerAuthentication
 from rest_framework import permissions
 from rest_framework import viewsets
 from rest_framework.exceptions import ParseError, ValidationError
-from virtual_labs.models import VirtualLab
 
-from .permissions import IsOwner, IsOwnerOrReadOnly
+from oidc_jwt_auth.authentication import OIDCAccessTokenBearerAuthentication
+from virtual_labs.models import VirtualLab
+from .permissions import IsOwner
 
 
 class BaseAssetViewSet(viewsets.ModelViewSet):
@@ -13,7 +13,7 @@ class BaseAssetViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     # this should be overridden by children ViewSets
-    model_class: models.Model|None = None
+    model_class: models.Model | None = None
 
     def get_queryset(self, *args, **kwargs):
         return self.model_class.objects.all().filter(owner=self.request.user)

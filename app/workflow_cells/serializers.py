@@ -12,6 +12,7 @@ class BaseImageSerializer(serializers.ModelSerializer):
         model = models.BaseImage
         fields = ['build', 'runtime']
 
+
 class CellNestedFieldSerializer(serializers.ListSerializer):
     def _data_hash(self, data):
         json = JSONRenderer().render(data)
@@ -42,6 +43,7 @@ class CellNestedFieldSerializer(serializers.ListSerializer):
                 item.delete()
 
         return ret
+
 
 class DependencySerializer(serializers.ModelSerializer):
     class Meta:

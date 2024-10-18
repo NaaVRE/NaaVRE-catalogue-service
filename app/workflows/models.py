@@ -1,5 +1,6 @@
-from base_assets.models import BaseAsset
 from django.db import models
+
+from base_assets.models import BaseAsset
 
 
 class Workflow(BaseAsset):
