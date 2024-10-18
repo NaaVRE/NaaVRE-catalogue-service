@@ -16,36 +16,81 @@ auth:bearer {
 
 body:json {
   {
-      "title": "test-workflow-1",
-      "description": "Test Workflow 1 other description",
-      "source_url": "",
-      "run_url": "",
-      "status": "",
-      "progress": ""
+    "virtual_lab": "test-virtual-lab-1",
+    "title": "test-cell-2",
+    "description": "Test cell 2 other description",
+    "container_image": "test-image-2",
+    "base_container_image": {
+      "build": "test-build-2-other-updated",
+      "runtime": "test-runtime-2-other-updated"
+    },
+    "outputs": [
+      {
+        "name": "test-output-3-updated",
+        "type": "float"
+      },
+      {
+        "name": "test-output-4",
+        "type": "list"
+      }
+    ],
+    "confs": []
   }
 }
 
 tests {
   test("Status code is 200", function () {
-      expect(res.getStatus()).to.equal(200);
+    expect(res.getStatus()).to.equal(200);
   });
   test("JSON response is valid", function () {
-      var jsonData = res.getBody();
-      expect(jsonData).to.include(
-          {
-              // "url": "http://localhost:8000/workflow-cells/abfd9752-0bea-4f3b-a26d-0f5bda1e22f0/",
-              "owner": "test-user-2",
-              "virtual_lab": "test-virtual-lab-1",
-              "title": "test-workflow-1",
-              "description": "Test Workflow 1 other description",
-              "source_url": "",
-              "run_url": "",
-              "status": "",
-              "progress": ""
-          }
-      );
-      expect(jsonData.url).is.not.null;
-      expect(jsonData.created).is.not.null;
-      expect(jsonData.modified).is.not.null;
+    var jsonData = res.getBody();
+    expect(jsonData).to.deep.include({
+      "owner": "test-user-2",
+      "virtual_lab": "test-virtual-lab-1",
+      "base_container_image": {
+        "build": "test-build-2-other-updated",
+        "runtime": "test-runtime-2-other-updated"
+      },
+      "dependencies": [
+        {
+          "name": "test-dependency-2",
+          "module": "",
+          "asname": ""
+        }
+      ],
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "test-output-3-updated",
+          "type": "float"
+        },
+        {
+          "name": "test-output-4",
+          "type": "list"
+        }
+      ],
+      "confs": [],
+      "params": [
+        {
+          "name": "test_param_2",
+          "type": "str",
+          "default_value": "\"test\""
+        }
+      ],
+      "secrets": [
+        {
+          "name": "test-secret-2",
+          "type": "str"
+        }
+      ],
+      "title": "test-cell-2",
+      "description": "Test cell 2 other description",
+      "container_image": "test-image-2",
+      "kernel": "",
+      "source_url": ""
+    });
+    expect(jsonData.url).is.not.null;
+    expect(jsonData.created).is.not.null;
+    expect(jsonData.modified).is.not.null;
   });
 }

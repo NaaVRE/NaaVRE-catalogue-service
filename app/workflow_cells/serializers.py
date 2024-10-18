@@ -1,4 +1,7 @@
+import hashlib
+
 from rest_framework import serializers
+from rest_framework.renderers import JSONRenderer
 
 from base_assets.serializers import BaseAssetSerializer
 from . import models
@@ -9,16 +12,48 @@ class BaseImageSerializer(serializers.ModelSerializer):
         model = models.BaseImage
         fields = ['build', 'runtime']
 
+class CellNestedFieldSerializer(serializers.ListSerializer):
+    def _data_hash(self, data):
+        json = JSONRenderer().render(data)
+        return hashlib.sha1(json).hexdigest()
+
+    def _instance_hash(self, instance):
+        serializer_class = self.child.__class__
+        data = serializer_class(instance).data
+        return self._data_hash(data)
+
+    def update(self, instance, validated_data):
+        # use hash of the serialized instances and data as deterministic ids
+        instance_mapping = {self._instance_hash(inst): inst for inst in instance}
+        data_mapping = {self._data_hash(dat): dat for dat in validated_data}
+
+        # Perform creations and updates
+        ret = []
+        for item_hash, data in data_mapping.items():
+            instance = instance_mapping.get(item_hash)
+            if instance is None:
+                ret.append(self.child.create(data))
+            else:
+                ret.append(self.child.update(instance, data))
+
+        # Perform deletions
+        for item_hash, item in instance_mapping.items():
+            if item_hash not in data_mapping:
+                item.delete()
+
+        return ret
 
 class DependencySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Dependency
         fields = ['name', 'module', 'asname']
+        list_serializer_class = CellNestedFieldSerializer
 
 
 class BaseVariableSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ['name', 'type']
+        list_serializer_class = CellNestedFieldSerializer
 
 
 class InputSerializer(BaseVariableSerializer):
@@ -35,6 +70,7 @@ class ConfSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Conf
         fields = ['name', 'assignation']
+        list_serializer_class = CellNestedFieldSerializer
 
 
 class ParamSerializer(BaseVariableSerializer):
@@ -91,28 +127,13 @@ class CellSerializer(BaseAssetSerializer):
             name, serializer_class, data, parent_instance=None, many=False,
             ):
         if many:
-            # FIXME: it's unclear how to deal with this. DRF message states:
-            # "Serializers with many=True do not support multiple update by
-            # default, only multiple create. For updates it is unclear how to
-            # deal with insertions and deletions. If you need to support
-            # multiple update, use a `ListSerializer` class and override
-            # `.update()` so you can specify the behavior exactly."
-            # Could try
-            # https://www.django-rest-framework.org/api-guide/serializers/#customizing-multiple-update
-            # But how to chose which objects to update vs remove or recreate,
-            # because the serialized data intentionally doesn't have PKs
-            instances = parent_instance.__getattribute__(name).all()
-            serializer = serializer_class(instances, many=True)
-            # if data is not None:
-            #     instances = serializer.update(instances, data)
-            # FIXME: for now return [], which results in no data updates
-            return []
+            instance = parent_instance.__getattribute__(name).all()
         else:
             instance = parent_instance.__getattribute__(name)
-            serializer = serializer_class(instance)
-            if data is not None:
-                instance = serializer.update(instance, data)
-            return instance
+        serializer = serializer_class(instance, many=many)
+        if data is not None:
+            instance = serializer.update(instance, data)
+        return instance
 
     @staticmethod
     def extract_nested_instances(
@@ -158,10 +179,9 @@ class CellSerializer(BaseAssetSerializer):
             validated_data,
             many=True,
             )
-        instance = models.Cell.objects.create(
-            **nested_instances,
-            **validated_data,
-            )
+        validated_data.update(nested_instances)
+        print(validated_data)
+        instance = models.Cell.objects.create(**validated_data)
         for name, nested_instance in nested_instances_many.items():
             instance.__getattribute__(name).set(nested_instance)
         return instance
@@ -180,4 +200,9 @@ class CellSerializer(BaseAssetSerializer):
             instance=instance,
             many=True,
             )
-        return super().update(instance, validated_data)
+        validated_data.update(nested_instances)
+        print(validated_data)
+        instance = super().update(instance, validated_data)
+        for name, nested_instance in nested_instances_many.items():
+            instance.__getattribute__(name).set(nested_instance)
+        return instance
