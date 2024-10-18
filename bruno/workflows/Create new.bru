@@ -27,8 +27,14 @@ body:json {
 }
 
 script:post-response {
-  uuid = res.getBody().url.replace(/.*\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/$/, "$1")
-  bru.setVar('validWorkflowUUID', uuid)
+  try {
+    uuid = res.getBody().url.replace(/.*\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/$/, "$1")
+    bru.setVar('validWorkflowUUID', uuid)
+    bru.setVar('invalidWorkflowUUID', require("uuid").v4())
+  }
+  catch (e) {
+    console.log(e)
+  }
 }
 
 tests {

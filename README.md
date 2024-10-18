@@ -27,3 +27,11 @@ python app/manage.py runserver
 ```
 
 API testing is done with [bruno](https://github.com/usebruno/bruno), and the collection in the [./bruno](./bruno) folder.
+
+To run the API test from the command line:
+
+```shell
+npm install
+cd bruno
+bru run --env localhost
+```
