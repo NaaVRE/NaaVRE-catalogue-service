@@ -29,6 +29,6 @@ class CellViewSet(BaseAssetViewSet):
         resp = super().destroy(request, *args, **kwargs)
         # destroy orphan related instances
         for related_instance in related_instances:
-            if not related_instance.cell_set.exists():
+            if related_instance and not related_instance.cell_set.exists():
                 related_instance.delete()
         return resp
