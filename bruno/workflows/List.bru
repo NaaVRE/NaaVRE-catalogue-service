@@ -1,0 +1,26 @@
+meta {
+  name: List
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/workflows/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  test("JSON response is valid", function () {
+      var jsonData = res.getBody();
+      // We expect the element created at "Create new"
+      expect(jsonData.count).to.eq(1);
+  });
+}

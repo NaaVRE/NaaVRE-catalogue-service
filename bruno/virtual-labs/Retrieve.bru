@@ -1,0 +1,35 @@
+meta {
+  name: Retrieve
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/virtual-labs/test-virtual-lab-1/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  test("JSON response is valid", function () {
+      var jsonData = res.getBody();
+      expect(jsonData).to.include({
+        // "url": "http://localhost:8000/virtual-labs/test-virtual-lab-1/",
+        "slug": "test-virtual-lab-1",
+        "title": "test-virtual-lab-1",
+        "description": "",
+        // "created": "2024-10-16T13:05:39.474000Z",
+        // "modified": "2024-10-16T13:05:39.474000Z",
+        "deployment_url": "",
+        "container_image": ""
+      });
+  });
+  
+}

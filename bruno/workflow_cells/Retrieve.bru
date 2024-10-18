@@ -1,0 +1,78 @@
+meta {
+  name: Retrieve
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/workflow-cells/{{validCellUUID}}/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+tests {
+  test("Status code is 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+  test("JSON response is valid", function () {
+    var jsonData = res.getBody();
+    expect(jsonData).to.deep.include({
+      "owner": "test-user-2",
+      "virtual_lab": "test-virtual-lab-1",
+      "base_container_image": {
+        "build": "test-build-2",
+        "runtime": "test-runtime-2"
+      },
+      "dependencies": [
+        {
+          "name": "test-dependency-2",
+          "module": "",
+          "asname": ""
+        }
+      ],
+      "inputs": [
+        {
+          "name": "test-input-2",
+          "type": "float"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "test-output-2",
+          "type": "int"
+        }
+      ],
+      "confs": [
+        {
+          "name": "test_conf_2",
+          "assignation": "test_conf_2 = 'abc'"
+        }
+      ],
+      "params": [
+        {
+          "name": "test_param_2",
+          "type": "str",
+          "default_value": "\"test\""
+        }
+      ],
+      "secrets": [
+        {
+          "name": "test-secret-2",
+          "type": "str"
+        }
+      ],
+      "title": "test-cell-2",
+      "description": "",
+      "container_image": "test-image-2",
+      "kernel": "",
+      "source_url": ""
+    });
+    expect(jsonData.url).is.not.null;
+    expect(jsonData.created).is.not.null;
+    expect(jsonData.modified).is.not.null;
+  });
+}

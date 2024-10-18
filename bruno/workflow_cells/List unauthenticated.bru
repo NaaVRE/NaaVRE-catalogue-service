@@ -1,0 +1,28 @@
+meta {
+  name: List unauthenticated
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/workflow-cells/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: 
+}
+
+tests {
+  test("Status code is 401", function () {
+      expect(res.getStatus()).to.equal(401);
+  });
+  test("JSON response is valid", function () {
+      var jsonData = res.getBody();
+      expect(jsonData).to.include({
+        "detail": "Invalid token header. No credentials provided."
+      });
+  });
+  
+}

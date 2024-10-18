@@ -1,0 +1,24 @@
+meta {
+  name: List unauthenticated
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/virtual-labs/
+  body: none
+  auth: none
+}
+
+tests {
+  test("Status code is 401", function () {
+      expect(res.getStatus()).to.equal(401);
+  });
+  test("Error message is valid", function () {
+      var jsonData = res.getBody();
+      expect(jsonData).to.eql({
+          "detail": "Authentication credentials were not provided."
+      });
+  });
+  
+}

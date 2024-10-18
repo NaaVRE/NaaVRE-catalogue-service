@@ -1,0 +1,21 @@
+meta {
+  name: Delete other
+  type: http
+  seq: 17
+}
+
+delete {
+  url: {{baseUrl}}/workflow-cells/{{otherValidCellUUID}}/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+tests {
+  test("Status code is 204", function () {
+      expect(res.getStatus()).to.equal(204);
+  });
+}

@@ -1,3 +1,9 @@
-from django.shortcuts import render
+from base_assets.views import BaseAssetViewSet
 
-# Create your views here.
+from . import models
+from . import serializers
+
+
+class WorkflowViewSet(BaseAssetViewSet):
+    serializer_class = serializers.WorkflowSerializer
+    model_class = models.Workflow

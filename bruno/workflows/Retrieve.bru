@@ -1,0 +1,40 @@
+meta {
+  name: Retrieve
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/workflows/{{validWorkflowUUID}}/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  test("JSON response is valid", function () {
+      var jsonData = res.getBody();
+      expect(jsonData).to.include(
+          {
+              // "url": "http://localhost:8000/workflows/abfd9752-0bea-4f3b-a26d-0f5bda1e22f0/",
+              "owner": "test-user-2",
+              "virtual_lab": "test-virtual-lab-1",
+              "title": "test-workflow-1",
+              "description": "",
+              "source_url": "",
+              "run_url": "",
+              "status": "",
+              "progress": ""
+          }
+      );
+      expect(jsonData.url).is.not.null;
+      expect(jsonData.created).is.not.null;
+      expect(jsonData.modified).is.not.null;
+  });
+}

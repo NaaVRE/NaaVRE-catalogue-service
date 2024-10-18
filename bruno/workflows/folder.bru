@@ -1,0 +1,7 @@
+meta {
+  name: workflows
+}
+
+script:pre-request {
+  bru.setVar('invalidWorkflowUUID', require("uuid").v4());
+}

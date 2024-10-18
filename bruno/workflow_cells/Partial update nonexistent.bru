@@ -1,0 +1,40 @@
+meta {
+  name: Partial update nonexistent
+  type: http
+  seq: 8
+}
+
+patch {
+  url: {{baseUrl}}/workflow-cells/{{invalidCellUUID}}/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+body:json {
+  {
+      "title": "test-workflow-1",
+      "description": "Test Workflow 1 description",
+      "source_url": "",
+      "run_url": "",
+      "status": "",
+      "progress": ""
+  }
+}
+
+tests {
+  test("Status code is 404", function () {
+      expect(res.getStatus()).to.equal(404);
+  });
+  test("JSON response is valid", function () {
+      var jsonData = res.getBody();
+      expect(jsonData).to.include(
+          {
+              "detail": "No Cell matches the given query."
+          }
+      );
+  });
+}

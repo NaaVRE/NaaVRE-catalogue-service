@@ -1,0 +1,61 @@
+meta {
+  name: Partial update
+  type: http
+  seq: 10
+}
+
+patch {
+  url: {{baseUrl}}/workflow-cells/{{validCellUUID}}/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+body:json {
+  {
+    "virtual_lab": "test-virtual-lab-1",
+    "title": "test-cell-2",
+    "description": "Test cell 2 description",
+    "container_image": "test-image-2",
+    "base_container_image": {
+      "build": "test-build-2",
+      "runtime": "test-runtime-2"
+    },
+    "inputs": [
+    ],
+    "outputs": [
+      {
+        "name": "test-output-2",
+        "type": "int"
+      }
+    ]
+  }
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  test("JSON response is valid", function () {
+      var jsonData = res.getBody();
+      expect(jsonData).to.include(
+          {
+              // "url": "http://localhost:8000/workflow-cells/abfd9752-0bea-4f3b-a26d-0f5bda1e22f0/",
+              "owner": "test-user-2",
+              "virtual_lab": "test-virtual-lab-1",
+              "title": "test-workflow-1",
+              "description": "Test Workflow 1 description",
+              "source_url": "",
+              "run_url": "",
+              "status": "",
+              "progress": ""
+          }
+      );
+      expect(jsonData.url).is.not.null;
+      expect(jsonData.created).is.not.null;
+      expect(jsonData.modified).is.not.null;
+  });
+}

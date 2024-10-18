@@ -25,3 +25,5 @@ Run the dev server
 while read env; do export $env; done < dev.env
 python app/manage.py runserver
 ```
+
+API testing is done with [bruno](https://github.com/usebruno/bruno), and the collection in the [./bruno](./bruno) folder.

@@ -1,0 +1,27 @@
+meta {
+  name: List not ours
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/workflows/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{notOurJWT}}
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  test("JSON response is valid", function () {
+      var jsonData = res.getBody();
+      // While an element was created by "Create new", it doesn’t belong to us so the list should be empty
+      expect(jsonData.count).to.eq(0);
+  });
+  
+}

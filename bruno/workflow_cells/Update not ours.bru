@@ -1,0 +1,40 @@
+meta {
+  name: Update not ours
+  type: http
+  seq: 12
+}
+
+put {
+  url: {{baseUrl}}/workflow-cells/{{validCellUUID}}/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{notOurJWT}}
+}
+
+body:json {
+  {
+      "title": "test-workflow-1",
+      "description": "Test Workflow 1 other description",
+      "source_url": "",
+      "run_url": "",
+      "status": "",
+      "progress": ""
+  }
+}
+
+tests {
+  test("Status code is 404", function () {
+      expect(res.getStatus()).to.equal(404);
+  });
+  test("JSON response is valid", function () {
+      var jsonData = res.getBody();
+      expect(jsonData).to.include(
+          {
+              "detail": "No Cell matches the given query."
+          }
+      );
+  });
+}
