@@ -1,6 +1,6 @@
 import logging
-import os
 import ssl
+from functools import lru_cache
 from typing import Union
 
 from django.contrib.auth.models import User
@@ -12,6 +12,7 @@ from rest_framework.authentication import (
     )
 from rest_framework.exceptions import AuthenticationFailed
 
+from django.conf import settings
 from .models import OIDCUser
 
 logger = logging.getLogger()
@@ -30,13 +31,8 @@ class OIDCAccessTokenBearerAuthentication(BaseAuthentication):
     model = None
 
     def __init__(self):
-        self.verify_ssl = self._get_verify_ssl()
+        self.verify_ssl = settings.VERIFY_SSL
         self.ssl_context = self._get_ssl_context(self.verify_ssl)
-        self.openid_conf = self._get_openid_conf(self.verify_ssl)
-
-    @staticmethod
-    def _get_verify_ssl() -> bool:
-        return os.getenv('VERIFY_SSL', 'true').lower() != 'false'
 
     @staticmethod
     def _get_ssl_context(verify_ssl: bool) -> ssl.SSLContext:
@@ -46,9 +42,11 @@ class OIDCAccessTokenBearerAuthentication(BaseAuthentication):
             return ssl.SSLContext(verify_mode=ssl.CERT_NONE)
 
     @staticmethod
+    @lru_cache
     def _get_openid_conf(verify_ssl: bool) -> Union[dict, None]:
-        url = os.environ['OIDC_CONFIGURATION_URL']
-        r = requests.get(url, verify=verify_ssl)
+        if not settings.OIDC_CONFIGURATION_URL:
+            raise ValueError('settings.OIDC_CONFIGURATION_URL cannot be empty')
+        r = requests.get(settings.OIDC_CONFIGURATION_URL, verify=verify_ssl)
         r.raise_for_status()
         return r.json()
 
@@ -78,7 +76,8 @@ class OIDCAccessTokenBearerAuthentication(BaseAuthentication):
         return user, token
 
     def validate_token(self, access_token):
-        url = self.openid_conf['jwks_uri']
+        openid_conf = self._get_openid_conf(self.verify_ssl)
+        url = openid_conf['jwks_uri']
         jwks_client = jwt.PyJWKClient(url, ssl_context=self.ssl_context)
 
         signing_key = jwks_client.get_signing_key_from_jwt(access_token)
@@ -118,7 +117,7 @@ class OIDCAccessTokenBearerAuthentication(BaseAuthentication):
         return data
 
     def get_user(self, token):
-        if os.getenv('DISABLE_AUTH', 'false').lower() == 'true':
+        if settings.DISABLE_AUTH:
             data = self.validate_fake_token(token)
         else:
             data = self.validate_token(token)

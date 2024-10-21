@@ -2,8 +2,8 @@ from django.contrib import admin
 from django.shortcuts import redirect
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
+from django.conf import settings
 
-from app.settings import BASE_PATH
 from virtual_labs.urls import router as virtual_labs_router
 from workflow_cells.urls import router as workflow_cells_router
 from workflows.urls import router as workflows_router
@@ -19,8 +19,8 @@ urlpatterns = [
     path('', include(router.urls)),
     ]
 
-if BASE_PATH:
+if settings.BASE_PATH:
     urlpatterns = [
-        path(f'{BASE_PATH}/', include(urlpatterns)),
-        path('', lambda request: redirect(f'{BASE_PATH}/')),
+        path(f'{settings.BASE_PATH}/', include(urlpatterns)),
+        path('', lambda request: redirect(f'{settings.BASE_PATH}/')),
         ]
