@@ -4,3 +4,5 @@ djangorestframework==3.15.2
 PyJWT[crypto]==2.9.0
 requests==2.32.3
 whitenoise==6.7.0
+gunicorn==23.0.0
+django-probes==1.7.0

@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'django_probes',
     'base_assets',
     'oidc_jwt_auth',
     'virtual_labs',
