@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "naavre-catalogue-service.fullname" . }}
+  labels:
+    {{- include "naavre-catalogue-service.labels" . | nindent 4 }}
+data:
+  BASE_PATH: "{{ .Values.conf.base_path }}"
+  OIDC_CONFIGURATION_URL: "{{ .Values.conf.oidc_configuration_url }}"
+  VERIFY_SSL: "{{ .Values.conf.verify_ssl }}"
+  DJANGO_SUPERUSER_EMAIL: "{{ .Values.conf.django.superuser_email }}"
+  DJANGO_SUPERUSER_USERNAME: "{{ .Values.conf.django.superuser_username }}"
+  DJANGO_SETTINGS_MODULE: "{{ .Values.conf.django.settings_module }}"
+  ALLOWED_HOSTS: "*"
+  CSRF_TRUSTED_ORIGINS: "{{ range $i, $host := .Values.ingress.hosts }}{{ if ne $i 0 }},{{ end }}https://{{ $host.host }}{{ end }}"
+  CORS_ALLOWED_ORIGIN_REGEXES: "{{ range $i, $host := .Values.ingress.hosts }}{{ if ne $i 0 }},{{ end }}^https:\\/\\/{{ $host.host | replace "." "\\\\." }}(:\\d+)?${{ end }}"

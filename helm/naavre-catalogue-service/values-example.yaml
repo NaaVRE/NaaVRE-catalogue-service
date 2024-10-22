@@ -1,0 +1,16 @@
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+  hosts:
+    - host: naavre-dev.minikube.test
+      paths:
+        - path: /my-root-path/
+          pathType: Prefix
+
+conf:
+  base_path: /my-root-path
+  oidc_configuration_url: "https://<keycloak-host>/<keycloak-base-path>/realms/<realm>/.well-known/openid-configuration"
+  django:
+    secret_key: 'a-random-string'
