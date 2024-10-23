@@ -16,7 +16,7 @@ Setup the dev database
 python app/manage.py makemigrations
 python app/manage.py migrate
 python app/manage.py loaddata app/fixtures.json
-python app/manage.py createsuperuser
+python app/manage.py createsuperuser --no-input
 ```
 
 Run the dev server
