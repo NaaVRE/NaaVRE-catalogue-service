@@ -127,12 +127,12 @@ conf:
   base_path: ""
   oidc_configuration_url: ""
   verify_ssl: "true"
+  dev_mode: "false"
   django:
     secret_key: ""
     superuser_email: ""
     superuser_username: ""
     superuser_password: ""
-    settings_module: "app.settings.production"
 
 global:
   postgresqlEnabled: true

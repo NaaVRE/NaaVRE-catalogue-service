@@ -10,7 +10,7 @@ data:
   VERIFY_SSL: "{{ .Values.conf.verify_ssl }}"
   DJANGO_SUPERUSER_EMAIL: "{{ .Values.conf.django.superuser_email }}"
   DJANGO_SUPERUSER_USERNAME: "{{ .Values.conf.django.superuser_username }}"
-  DJANGO_SETTINGS_MODULE: "{{ .Values.conf.django.settings_module }}"
+  DEV_MODE: "{{ .Values.conf.dev_mode }}"
   ALLOWED_HOSTS: "*"
   CSRF_TRUSTED_ORIGINS: "{{ range $i, $host := .Values.ingress.hosts }}{{ if ne $i 0 }},{{ end }}https://{{ $host.host }}{{ end }}"
   CORS_ALLOWED_ORIGIN_REGEXES: "{{ range $i, $host := .Values.ingress.hosts }}{{ if ne $i 0 }},{{ end }}^https:\\/\\/{{ $host.host | replace "." "\\\\." }}(:\\d+)?${{ end }}"
