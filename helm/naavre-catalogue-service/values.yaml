@@ -133,3 +133,14 @@ conf:
     superuser_username: ""
     superuser_password: ""
     settings_module: "app.settings.production"
+
+global:
+  postgresqlEnabled: true
+  postgresql:
+    auth:
+      username: "naavre-catalogue"
+      password: "fake-naavre-catalogue-password"
+      database: "naavre-catalogue"
+    service:
+      ports:
+        postgresql: "5432"

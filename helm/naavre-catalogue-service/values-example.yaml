@@ -14,3 +14,8 @@ conf:
   oidc_configuration_url: "https://<keycloak-host>/<keycloak-base-path>/realms/<realm>/.well-known/openid-configuration"
   django:
     secret_key: 'a-random-string'
+
+global:
+  postgresql:
+    auth:
+      password: "a-random-password"

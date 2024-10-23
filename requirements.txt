@@ -6,3 +6,4 @@ requests==2.32.3
 whitenoise==6.7.0
 gunicorn==23.0.0
 django-probes==1.7.0
+psycopg[binary]==3.2.3
