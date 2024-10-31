@@ -128,6 +128,7 @@ conf:
   oidc_configuration_url: ""
   verify_ssl: "true"
   dev_mode: "false"
+  insecure_disable_auth: "false"
   django:
     secret_key: ""
     superuser_email: ""
