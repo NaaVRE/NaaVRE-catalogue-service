@@ -6,7 +6,7 @@
       "password": "",
       "last_login": null,
       "is_superuser": false,
-      "username": "test-user-1",
+      "username": "fixture-user-1",
       "first_name": "",
       "last_name": "",
       "email": "",
@@ -21,24 +21,36 @@
     "model": "base_assets.baseasset",
     "pk": "293f1c6e-971b-44e2-adb3-c335ec2b17c1",
     "fields": {
-      "title": "test-workflow-1",
+      "title": "fixture-workflow-1",
       "description": "",
       "created": "2024-10-16T13:14:21.303Z",
       "modified": "2024-10-16T13:14:21.303Z",
       "owner": 2,
-      "virtual_lab": "test-virtual-lab-1"
+      "virtual_lab": "fixture-virtual-lab-1"
     }
   },
   {
     "model": "base_assets.baseasset",
     "pk": "b2668e85-d813-40e7-b4a1-803764f7c653",
     "fields": {
-      "title": "test-cell-1",
+      "title": "fixture-cell-1",
       "description": "",
       "created": "2024-10-16T13:13:54.482Z",
       "modified": "2024-10-16T13:13:54.482Z",
       "owner": 2,
-      "virtual_lab": "test-virtual-lab-1"
+      "virtual_lab": "fixture-virtual-lab-1"
+    }
+  },
+  {
+    "model": "virtual_labs.virtuallab",
+    "pk": "fixture-virtual-lab-1",
+    "fields": {
+      "title": "fixture-virtual-lab-1",
+      "description": "",
+      "created": "2024-10-16T13:05:39.474Z",
+      "modified": "2024-10-16T13:05:39.474Z",
+      "deployment_url": "",
+      "container_image": ""
     }
   },
   {
@@ -57,15 +69,15 @@
     "model": "workflow_cells.baseimage",
     "pk": 1,
     "fields": {
-      "build": "test-build-1",
-      "runtime": "test-runtime-1"
+      "build": "fixture-build-1",
+      "runtime": "fixture-runtime-1"
     }
   },
   {
     "model": "workflow_cells.dependency",
     "pk": 1,
     "fields": {
-      "name": "test-dependency-1",
+      "name": "fixture-dependency-1",
       "module": "",
       "asname": ""
     }
@@ -74,8 +86,8 @@
     "model": "workflow_cells.dependency",
     "pk": 2,
     "fields": {
-      "name": "test-dependency-2",
-      "module": "test-dependency-2-module",
+      "name": "fixture-dependency-2",
+      "module": "fixture-dependency-2-module",
       "asname": ""
     }
   },
@@ -83,25 +95,25 @@
     "model": "workflow_cells.dependency",
     "pk": 3,
     "fields": {
-      "name": "test-dependency-3",
+      "name": "fixture-dependency-3",
       "module": "",
-      "asname": "test-dependency-3-asname"
+      "asname": "fixture-dependency-3-asname"
     }
   },
   {
     "model": "workflow_cells.dependency",
     "pk": 4,
     "fields": {
-      "name": "test-dependency-4",
-      "module": "test-dependency-4-module",
-      "asname": "test-dependency-4-asname"
+      "name": "fixture-dependency-4",
+      "module": "fixture-dependency-4-module",
+      "asname": "fixture-dependency-4-asname"
     }
   },
   {
     "model": "workflow_cells.basevariable",
     "pk": 1,
     "fields": {
-      "name": "test-output-1",
+      "name": "fixture-output-1",
       "type": "int"
     }
   },
@@ -109,7 +121,7 @@
     "model": "workflow_cells.basevariable",
     "pk": 2,
     "fields": {
-      "name": "test-input-1",
+      "name": "fixture-input-1",
       "type": "float"
     }
   },
@@ -117,7 +129,7 @@
     "model": "workflow_cells.basevariable",
     "pk": 3,
     "fields": {
-      "name": "test_param_1",
+      "name": "fixture-param-1",
       "type": "str"
     }
   },
@@ -125,7 +137,7 @@
     "model": "workflow_cells.basevariable",
     "pk": 4,
     "fields": {
-      "name": "test-secret-1",
+      "name": "fixture-secret-1",
       "type": "str"
     }
   },
@@ -143,15 +155,15 @@
     "model": "workflow_cells.conf",
     "pk": 1,
     "fields": {
-      "name": "test_conf_1",
-      "assignation": "test_conf_1 = 'abc'"
+      "name": "fixture-conf-1",
+      "assignation": "conf_1 = 'abc'"
     }
   },
   {
     "model": "workflow_cells.param",
     "pk": 3,
     "fields": {
-      "default_value": "\"test\""
+      "default_value": "\"fixture\""
     }
   },
   {
@@ -163,7 +175,7 @@
     "model": "workflow_cells.cell",
     "pk": "b2668e85-d813-40e7-b4a1-803764f7c653",
     "fields": {
-      "container_image": "test-image-1",
+      "container_image": "fixture-image-1",
       "base_container_image": null,
       "kernel": "",
       "source_url": "",
