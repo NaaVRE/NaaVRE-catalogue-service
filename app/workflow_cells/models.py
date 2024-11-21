@@ -21,8 +21,8 @@ class BaseImage(models.Model):
 
 class Dependency(models.Model):
     name = models.CharField(max_length=100)
-    module = models.CharField(blank=True, max_length=100)
-    asname = models.CharField(blank=True, max_length=100)
+    module = models.CharField(blank=True, null=True, max_length=100)
+    asname = models.CharField(blank=True, null=True, max_length=100)
 
     class Meta:
         verbose_name_plural = 'dependencies'
