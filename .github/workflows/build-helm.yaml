@@ -37,6 +37,7 @@ jobs:
 
       - name: Package Helm charts
         run: |
+          helm dependency update helm/naavre-catalogue-service
           helm package helm/naavre-catalogue-service -d .charts-packages/
 
       - name: Log in to the Container registry
