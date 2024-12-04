@@ -32,8 +32,13 @@ jobs:
     if: ${{ needs.configure-workflow.outputs.should_skip != 'true' }}
     uses: ./.github/workflows/lint.yaml
 
+  test:
+    needs: [configure-workflow]
+    if: ${{ needs.configure-workflow.outputs.should_skip != 'true' }}
+    uses: ./.github/workflows/test.yaml
+
   build-docker:
-    needs: [lint]
+    needs: [lint, test]
     uses: ./.github/workflows/build-docker.yaml
     with:
       oci_tag: ghcr.io/naavre/naavre-catalogue-service
@@ -41,7 +46,7 @@ jobs:
       push: ${{ github.event_name == 'release' }}
 
   helm-helm:
-    needs: [lint]
+    needs: [lint, test]
     uses: ./.github/workflows/build-helm.yaml
     with:
       oci_repo: ghcr.io/naavre/charts
