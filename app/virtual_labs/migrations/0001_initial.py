@@ -8,22 +8,30 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-    ]
+        ]
 
     operations = [
         migrations.CreateModel(
             name='VirtualLab',
             fields=[
-                ('slug', models.SlugField(primary_key=True, serialize=False, unique=True)),
+                ('slug', models.SlugField(
+                    primary_key=True, serialize=False, unique=True
+                    )),
                 ('title', models.CharField(max_length=100)),
                 ('description', models.TextField(blank=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deployment_url', models.URLField(blank=True, help_text='URL of the virtual lab deployment', verbose_name='URL')),
-                ('container_image', models.CharField(blank=True, help_text='Container image of the virtual lab', max_length=100)),
-            ],
+                ('deployment_url', models.URLField(
+                    blank=True, help_text='URL of the virtual lab deployment',
+                    verbose_name='URL'
+                    )),
+                ('container_image', models.CharField(
+                    blank=True, help_text='Container image of the virtual lab',
+                    max_length=100
+                    )),
+                ],
             options={
                 'ordering': ['created'],
-            },
-        ),
-    ]
+                },
+            ),
+        ]
