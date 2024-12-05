@@ -1,4 +1,7 @@
-from app.settings.base import *
+import os
+
+from app.settings.base import *  # noqa: F401 F403
+
 
 def get_required_env(key):
     try:
@@ -6,6 +9,7 @@ def get_required_env(key):
     except KeyError:
         msg = f'Environment variable is required: {key}'
         raise EnvironmentError(msg)
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = get_required_env('SECRET_KEY')

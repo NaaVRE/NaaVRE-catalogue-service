@@ -7,17 +7,25 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('workflow_cells', '0001_initial'),
-    ]
+        ]
 
     operations = [
         migrations.AlterField(
             model_name='cell',
             name='container_image',
-            field=models.CharField(help_text='Containerized cell image (example: ghcr.io/me/my-naavre-cells/my-cell-1:49c621b)', max_length=300),
-        ),
+            field=models.CharField(
+                help_text='Containerized cell image (example: ghcr.io/me/my-naavre-cells/my-cell-1:49c621b)',
+                max_length=300
+                ),
+            ),
         migrations.AlterField(
             model_name='cell',
             name='source_url',
-            field=models.URLField(blank=True, help_text='URL of the folder on GitHub containing the sources of the image (example: https://github.com/me/my-NaaVRE-cells/tree/2934de123c74316dc45fe84d340a7ca6914b8bc1/my-cell-1)'),
-        ),
-    ]
+            field=models.URLField(
+                blank=True,
+                help_text=('URL of the folder on GitHub containing the sources of the image '
+                           '(example: https://github.com/me/my-NaaVRE-cells/tree/'
+                           '2934de123c74316dc45fe84d340a7ca6914b8bc1/my-cell-1)')
+                ),
+            ),
+        ]

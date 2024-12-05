@@ -1,0 +1,56 @@
+name: Lint
+
+on:
+  workflow_call:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build app
+        run: |
+          docker build . --file docker/Dockerfile -t app:ci-test-build
+
+      - name: Create network
+        run: |
+          docker network create testing
+
+      - name: Start db
+        run: |
+          docker run --rm -d \
+            --name db \
+            --network testing \
+            -e POSTGRES_PASSWORD=fake-postgres-password \
+            postgres:17
+
+      - name: Start app
+        run: |
+          docker run --rm -d \
+            --name app \
+            --network testing \
+            -p 8000:8000 \
+            --env-file dev.env \
+            -e DB_HOST=db \
+            --health-cmd "python -c 'import requests; requests.get(\"http://localhost:8000/NaaVRE-catalogue-service/\").raise_for_status()'" \
+            --health-interval 10s \
+            app:ci-test-build
+
+      - name: Install test dependencies
+        run: |
+          npm install
+
+      - name: Wait for app
+        uses: raschmitt/wait-for-healthy-container/@v1
+        with:
+          container-name: app
+          timeout: 120
+
+      - name: Run API tests
+        run: |
+          cd bruno
+          npx bru run --env localhost
