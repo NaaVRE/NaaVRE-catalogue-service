@@ -15,7 +15,7 @@ data:
   ALLOWED_HOSTS: "*"
   CSRF_TRUSTED_ORIGINS: "{{ range $i, $host := .Values.ingress.hosts }}{{ if ne $i 0 }},{{ end }}https://{{ $host.host }}{{ end }}"
   CORS_ALLOWED_ORIGIN_REGEXES: "{{ range $i, $host := .Values.ingress.hosts }}{{ if ne $i 0 }},{{ end }}^https:\\/\\/{{ $host.host | replace "." "\\\\." }}(:\\d+)?${{ end }}"
-  DB_HOST: "{{ .Release.Name }}-postgresql"
+  DB_HOST: "{{ template "postgresql.v1.primary.fullname" .Subcharts.postgresql }}"
   DB_NAME: "{{ .Values.global.postgresql.auth.database }}"
   DB_PORT: "{{ .Values.global.postgresql.service.ports.postgresql }}"
   DB_USER: "{{ .Values.global.postgresql.auth.username }}"
