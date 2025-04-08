@@ -6,63 +6,79 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('workflow_cells', '0003_alter_dependency_asname_alter_dependency_module'),
-    ]
+        ('workflow_cells',
+         '0003_alter_dependency_asname_alter_dependency_module'),
+        ]
 
     operations = [
         migrations.AlterField(
             model_name='baseimage',
             name='build',
-            field=models.CharField(blank=True, help_text='Build stage base image (eg: ghcr.io/qcdis/naavre/naavre-cell-build-python:v0.18)', max_length=384),
-        ),
+            field=models.CharField(
+                blank=True,
+                help_text='Build stage base image (eg: ghcr.io/qcdis/naavre/naavre-cell-build-python:v0.18)',
+                max_length=384
+                ),
+            ),
         migrations.AlterField(
             model_name='baseimage',
             name='runtime',
-            field=models.CharField(blank=True, help_text='Runtime stage base image (eg: ghcr.io/qcdis/naavre/naavre-cell-runtime-python:v0.18)', max_length=384),
-        ),
+            field=models.CharField(
+                blank=True,
+                help_text='Runtime stage base image (eg: ghcr.io/qcdis/naavre/naavre-cell-runtime-python:v0.18)',
+                max_length=384
+                ),
+            ),
         migrations.AlterField(
             model_name='basevariable',
             name='name',
             field=models.CharField(max_length=255),
-        ),
+            ),
         migrations.AlterField(
             model_name='cell',
             name='container_image',
-            field=models.CharField(help_text='Containerized cell image (example: ghcr.io/me/my-naavre-cells/my-cell-1:49c621b)', max_length=384),
-        ),
+            field=models.CharField(
+                help_text='Containerized cell image (example: ghcr.io/me/my-naavre-cells/my-cell-1:49c621b)',
+                max_length=384
+                ),
+            ),
         migrations.AlterField(
             model_name='cell',
             name='kernel',
-            field=models.CharField(blank=True, help_text='Jupyter kernel of the source cell (example: ipython)', max_length=255),
-        ),
+            field=models.CharField(
+                blank=True,
+                help_text='Jupyter kernel of the source cell (example: ipython)',
+                max_length=255
+                ),
+            ),
         migrations.AlterField(
             model_name='conf',
             name='assignation',
             field=models.TextField(),
-        ),
+            ),
         migrations.AlterField(
             model_name='conf',
             name='name',
             field=models.CharField(max_length=255),
-        ),
+            ),
         migrations.AlterField(
             model_name='dependency',
             name='asname',
             field=models.CharField(blank=True, max_length=255, null=True),
-        ),
+            ),
         migrations.AlterField(
             model_name='dependency',
             name='module',
             field=models.CharField(blank=True, max_length=255, null=True),
-        ),
+            ),
         migrations.AlterField(
             model_name='dependency',
             name='name',
             field=models.CharField(max_length=255),
-        ),
+            ),
         migrations.AlterField(
             model_name='param',
             name='default_value',
             field=models.TextField(blank=True),
-        ),
-    ]
+            ),
+        ]
