@@ -8,7 +8,7 @@ from virtual_labs.models import VirtualLab
 
 class BaseAsset(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
