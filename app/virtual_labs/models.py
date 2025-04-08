@@ -3,7 +3,7 @@ from django.db import models
 
 class VirtualLab(models.Model):
     slug = models.SlugField(primary_key=True, unique=True)
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
@@ -12,7 +12,7 @@ class VirtualLab(models.Model):
         help_text='URL of the virtual lab deployment',
         )
     container_image = models.CharField(
-        max_length=100, blank=True,
+        max_length=384, blank=True,
         help_text='Container image of the virtual lab',
         )
 
