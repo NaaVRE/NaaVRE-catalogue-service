@@ -135,6 +135,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
     }
 
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 OIDC_CONFIGURATION_URL = os.getenv('OIDC_CONFIGURATION_URL')
 
 VERIFY_SSL = os.getenv('VERIFY_SSL', 'true').lower() != 'false'
