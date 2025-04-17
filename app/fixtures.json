@@ -66,6 +66,18 @@
     }
   },
   {
+    "model": "virtual_labs.virtuallab",
+    "pk": "test-virtual-lab-2",
+    "fields": {
+      "title": "test-virtual-lab-2",
+      "description": "",
+      "created": "2024-10-16T13:05:39.474Z",
+      "modified": "2024-10-16T13:05:39.474Z",
+      "deployment_url": "",
+      "container_image": ""
+    }
+  },
+  {
     "model": "workflow_cells.baseimage",
     "pk": 1,
     "fields": {
