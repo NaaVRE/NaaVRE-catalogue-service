@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'django_probes',
+    'django_filters',
     'base_assets',
     'oidc_jwt_auth',
     'virtual_labs',

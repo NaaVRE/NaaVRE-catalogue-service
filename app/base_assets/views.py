@@ -1,6 +1,9 @@
 from django.db import models
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 from rest_framework import permissions
 from rest_framework import viewsets
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.exceptions import ParseError, ValidationError
 
 from oidc_jwt_auth.authentication import OIDCAccessTokenBearerAuthentication
@@ -9,8 +12,20 @@ from .permissions import IsOwner
 
 
 class BaseAssetViewSet(viewsets.ModelViewSet):
-    authentication_classes = [OIDCAccessTokenBearerAuthentication]
+    authentication_classes = [
+        OIDCAccessTokenBearerAuthentication,
+        SessionAuthentication,
+        ]
     permission_classes = [permissions.IsAuthenticated, IsOwner]
+
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+        ]
+    filterset_fields = ['title', 'virtual_lab']
+    search_fields = ['title', 'description']
+    ordering_fields = ['title', 'created', 'modified']
 
     # this should be overridden by children ViewSets
     model_class: models.Model | None = None

@@ -1,11 +1,11 @@
 meta {
-  name: Delete
+  name: Delete other VL
   type: http
-  seq: 24
+  seq: 23
 }
 
 delete {
-  url: {{baseUrl}}/workflow-cells/{{validCellUUID}}/
+  url: {{baseUrl}}/workflow-cells/{{otherVLValidCellUUID}}/
   body: none
   auth: bearer
 }

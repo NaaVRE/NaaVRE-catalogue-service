@@ -1,13 +1,17 @@
 meta {
-  name: List
+  name: List search
   type: http
-  seq: 6
+  seq: 8
 }
 
 get {
-  url: {{baseUrl}}/workflow-cells/
+  url: {{baseUrl}}/workflow-cells/?search=cell-other-lab
   body: none
   auth: bearer
+}
+
+params:query {
+  search: cell-other-lab
 }
 
 auth:bearer {
@@ -21,6 +25,6 @@ tests {
   test("JSON response is valid", function () {
       var jsonData = res.getBody();
       // We expect the element created at "Create new"
-      expect(jsonData.count).to.eq(3);
+      expect(jsonData.count).to.eq(1);
   });
 }

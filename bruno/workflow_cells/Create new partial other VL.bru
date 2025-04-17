@@ -1,0 +1,61 @@
+meta {
+  name: Create new partial other VL
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/workflow-cells/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+body:json {
+  {
+    "virtual_lab": "test-virtual-lab-2",
+    "title": "test-cell-other-lab-4",
+    "container_image": "test-image-4"
+  }
+}
+
+script:post-response {
+  try {
+    uuid = res.getBody().url.replace(/.*\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/$/, "$1")
+    bru.setVar('otherVLValidCellUUID', uuid)
+  }
+  catch (e) {
+    console.log(e)
+  }
+}
+
+tests {
+  test("Status code is 201", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+  test("JSON response is valid", function () {
+    var jsonData = res.getBody();
+    expect(jsonData).to.deep.include({
+      "owner": "test-user-2",
+      "virtual_lab": "test-virtual-lab-2",
+      "base_container_image": null,
+      "dependencies": [],
+      "inputs": [],
+      "outputs": [],
+      "confs": [],
+      "params": [],
+      "secrets": [],
+      "title": "test-cell-other-lab-4",
+      "description": "",
+      "container_image": "test-image-4",
+      "kernel": "",
+      "source_url": ""
+    });
+    expect(jsonData.url).is.not.null;
+    expect(jsonData.created).is.not.null;
+    expect(jsonData.modified).is.not.null;
+  });
+}
