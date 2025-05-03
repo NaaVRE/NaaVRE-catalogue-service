@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django_filters',
     'base_assets',
     'oidc_jwt_auth',
+    'paas_configuration',
     'virtual_labs',
     'workflow_cells',
     'workflows',
