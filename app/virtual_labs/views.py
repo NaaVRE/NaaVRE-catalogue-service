@@ -12,11 +12,6 @@ from . import serializers
 class VirtualLabViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.VirtualLab.objects.all()
     serializer_class = serializers.VirtualLabSerializer
-    authentication_classes = [
-        OIDCAccessTokenBearerAuthentication,
-        SessionAuthentication,
-        ]
-    permission_classes = [permissions.IsAuthenticated]
 
     filter_backends = [
         DjangoFilterBackend,
