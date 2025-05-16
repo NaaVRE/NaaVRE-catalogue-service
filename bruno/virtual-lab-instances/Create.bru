@@ -1,0 +1,39 @@
+meta {
+  name: Create
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/virtual-lab-instances/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+body:json {
+  {
+      "virtual_lab": "test-virtual-lab-1"
+  }
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+  test("JSON response is valid", function () {
+      var jsonData = res.getBody();
+      expect(jsonData).to.include(
+          {
+              "virtual_lab": "test-virtual-lab-1",
+              "user": "Test User 2"
+          }
+      );
+      expect(jsonData.url).is.not.null;
+      expect(jsonData.created).is.not.null;
+      expect(jsonData.modified).is.not.null;
+  });
+}

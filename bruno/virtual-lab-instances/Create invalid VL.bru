@@ -1,0 +1,27 @@
+meta {
+  name: Create invalid VL
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/virtual-lab-instances/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+body:json {
+  {
+      "virtual_lab": "test-virtual-lab-invalid"
+  }
+}
+
+tests {
+  test("Status code is 400", function () {
+      expect(res.getStatus()).to.equal(400);
+  });
+}

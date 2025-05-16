@@ -1,10 +1,7 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
-from rest_framework import permissions
 from rest_framework import viewsets
-from rest_framework.authentication import SessionAuthentication
 
-from oidc_jwt_auth.authentication import OIDCAccessTokenBearerAuthentication
 from . import models
 from . import serializers
 
@@ -12,11 +9,6 @@ from . import serializers
 class VirtualLabViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.VirtualLab.objects.all()
     serializer_class = serializers.VirtualLabSerializer
-    authentication_classes = [
-        OIDCAccessTokenBearerAuthentication,
-        SessionAuthentication,
-        ]
-    permission_classes = [permissions.IsAuthenticated]
 
     filter_backends = [
         DjangoFilterBackend,

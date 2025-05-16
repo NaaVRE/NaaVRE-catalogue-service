@@ -1,0 +1,33 @@
+meta {
+  name: Create new
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/paas-configuration/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+script:pre-request {
+  bru.setVar('slug', 'test-virtual-lab-1')
+  bru.setVar('title', 'Test Virtual Lab 1')
+}
+
+tests {
+  test("Status code is 405", function () {
+      expect(res.getStatus()).to.equal(405);
+  });
+  test("JSON response is valid", function () {
+      var jsonData = res.getBody();
+      expect(jsonData).to.eql({
+        "detail": "Method \"POST\" not allowed."
+      });
+  });
+  
+}

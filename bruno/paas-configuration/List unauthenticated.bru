@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/virtual-labs/
+  url: {{baseUrl}}/paas-configuration/
   body: none
   auth: none
 }
@@ -16,6 +16,6 @@ tests {
   });
   test("JSON response is valid", function () {
       var jsonData = res.getBody();
-      expect(jsonData.count).to.eq(3);
+      expect(jsonData.count).to.eq(1);
   });
 }

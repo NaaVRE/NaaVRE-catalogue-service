@@ -15,6 +15,12 @@ class VirtualLab(models.Model):
         max_length=384, blank=True,
         help_text='Container image of the virtual lab',
         )
+    image = models.TextField(
+        null=True,
+        blank=True,
+        help_text=("Base 64-encoded image with a resolution of minimum "
+                   "100x100 px. E.g. \"data:image/png;base64,[...]\""),
+        )
 
     class Meta:
         ordering = ['created']

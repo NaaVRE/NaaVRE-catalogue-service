@@ -1,0 +1,36 @@
+meta {
+  name: List
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/virtual-lab-instances/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  test("JSON response is valid", function () {
+      var jsonData = res.getBody();
+      // We expect a single result, like the two entries created at 'Create' and 'Create duplicate'
+      expect(jsonData).to.deep.eq({
+          "count": 1,
+          "next": null,
+          "previous": null,
+          "results": [
+              {
+                  "virtual_lab": "test-virtual-lab-1",
+                  "user": "Test User 2"
+              }
+          ]
+      });
+  });
+}
