@@ -25,7 +25,8 @@ class Migration(migrations.Migration):
                     )),
                 ('documentation_url', models.URLField(blank=True, null=True)),
                 ('site_icon', models.TextField(
-                    help_text='Base 64-encoded image with a resolution of minimum 200x200 px. E.g. "data:image/png;base64,[...]"',
+                    help_text=('Base 64-encoded image with a resolution of minimum 200x200 px. '
+                               'E.g. "data:image/png;base64,[...]"'),
                     null=True
                     )),
                 ],

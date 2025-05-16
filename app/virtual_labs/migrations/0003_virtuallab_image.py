@@ -15,7 +15,8 @@ class Migration(migrations.Migration):
             name='image',
             field=models.TextField(
                 blank=True,
-                help_text='Base 64-encoded image with a resolution of minimum 100x100 px. E.g. "data:image/png;base64,[...]"',
+                help_text=('Base 64-encoded image with a resolution of minimum 100x100 px. '
+                           'E.g. "data:image/png;base64,[...]"'),
                 null=True
                 ),
             ),
