@@ -2,20 +2,18 @@ from rest_framework import mixins
 from rest_framework import permissions
 from rest_framework import viewsets
 from rest_framework.authentication import SessionAuthentication
-from rest_framework.exceptions import ParseError, ValidationError
-from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 
 from oidc_jwt_auth.authentication import OIDCAccessTokenBearerAuthentication
 from virtual_labs.models import VirtualLab
 from . import models
 from . import serializers
-from .serializers import VirtualLabInstanceSerializer
 
 
 class VirtualLabInstanceViewSet(
-    mixins.CreateModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet):
+        mixins.CreateModelMixin,
+        mixins.ListModelMixin,
+        viewsets.GenericViewSet):
     serializer_class = serializers.VirtualLabInstanceSerializer
     authentication_classes = [
         OIDCAccessTokenBearerAuthentication,
