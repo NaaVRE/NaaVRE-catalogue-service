@@ -1,0 +1,21 @@
+meta {
+  name: Retrieve
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/virtual-lab-instances/1/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+tests {
+  test("Status code is 404", function () {
+      expect(res.getStatus()).to.equal(404);
+  });
+}

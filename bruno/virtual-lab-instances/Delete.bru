@@ -1,0 +1,21 @@
+meta {
+  name: Delete
+  type: http
+  seq: 9
+}
+
+delete {
+  url: {{baseUrl}}/virtual-lab-instances/1/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+tests {
+  test("Status code is 404", function () {
+      expect(res.getStatus()).to.equal(404);
+  });
+}
