@@ -42,6 +42,16 @@
     }
   },
   {
+    "model": "paas_configuration.paasconfiguration",
+    "pk": 1,
+    "fields": {
+      "title": "fixture-paas-configuration-1",
+      "description": "Fixture PaaS configuration.",
+      "documentation_url": "https://naavre.net",
+      "site_icon": null
+    }
+  },
+  {
     "model": "virtual_labs.virtuallab",
     "pk": "fixture-virtual-lab-1",
     "fields": {

@@ -1,0 +1,28 @@
+meta {
+  name: Update
+  type: http
+  seq: 7
+}
+
+put {
+  url: {{baseUrl}}/paas-configuration/1/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+tests {
+  test("Status code is 405", function () {
+      expect(res.getStatus()).to.equal(405);
+  });
+  test("JSON response is valid", function () {
+      var jsonData = res.getBody();
+      expect(jsonData).to.eql({
+        "detail": "Method \"PUT\" not allowed."
+      });
+  });
+  
+}

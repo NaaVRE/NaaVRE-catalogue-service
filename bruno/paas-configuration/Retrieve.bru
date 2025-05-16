@@ -1,0 +1,31 @@
+meta {
+  name: Retrieve
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/paas-configuration/1/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  test("JSON response is valid", function () {
+      var jsonData = res.getBody();
+      expect(jsonData).to.include({
+        "title": "fixture-paas-configuration-1",
+        "description": "Fixture PaaS configuration.",
+        "documentation_url": "https://naavre.net",
+        "site_icon": null
+      });
+  });
+  
+}
