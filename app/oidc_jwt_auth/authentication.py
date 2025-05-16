@@ -125,12 +125,19 @@ class OIDCAccessTokenBearerAuthentication(BaseAuthentication):
         try:
             oidc_user = OIDCUser.objects.select_related('user').get(uid=uid)
             user = oidc_user.user
+            # Update name
+            if data.get('name') and data.get('name') != user.last_name:
+                user.last_name = data.get('name')
+                user.save()
         except OIDCUser.DoesNotExist:
             if User.objects.filter(username=data.get('preferred_username')):
                 msg = ('Cannot create User. A User with this username already '
                        'exists, but it is not linked to the token\'s OIDCUser')
                 raise AuthenticationFailed(msg)
-            user = User(username=data.get('preferred_username'))
+            user = User(
+                username=data.get('preferred_username'),
+                last_name=data.get('name', ''),
+                )
             user.save()
             oidc_user = OIDCUser(uid=uid, user=user)
             oidc_user.save()

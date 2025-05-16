@@ -1,24 +1,13 @@
 from rest_framework import serializers
-from rest_framework.validators import UniqueTogetherValidator
 
-from virtual_labs.models import VirtualLab
-from . import models
+from virtual_lab_instances import models
 
 
 class VirtualLabInstanceSerializer(serializers.HyperlinkedModelSerializer):
 
-    virtual_lab = serializers.SlugRelatedField(
-        slug_field='slug',
-        queryset=VirtualLab.objects.all()
-        )
+    virtual_lab = serializers.ReadOnlyField(source='virtual_lab.slug')
+    user = serializers.ReadOnlyField(source='user.last_name')
 
     class Meta:
         model = models.VirtualLabInstance
-        fields = ['virtual_lab', 'username']
-
-        validators = [
-            UniqueTogetherValidator(
-                queryset=models.VirtualLabInstance.objects.all(),
-                fields=['virtual_lab', 'username'],
-                )
-            ]
+        fields = ['virtual_lab', 'user']

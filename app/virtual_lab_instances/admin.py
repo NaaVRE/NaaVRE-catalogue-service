@@ -2,4 +2,7 @@ from django.contrib import admin
 
 from . import models
 
-admin.site.register(models.VirtualLabInstance)
+
+@admin.register(models.VirtualLabInstance)
+class VirtualLabInstanceAdmin(admin.ModelAdmin):
+    readonly_fields = ('date', )
