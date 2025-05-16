@@ -7,12 +7,16 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('virtual_labs', '0002_alter_virtuallab_container_image_and_more'),
-    ]
+        ]
 
     operations = [
         migrations.AddField(
             model_name='virtuallab',
             name='image',
-            field=models.TextField(blank=True, help_text='Base 64-encoded image with a resolution of minimum 100x100 px. E.g. "data:image/png;base64,[...]"', null=True),
-        ),
-    ]
+            field=models.TextField(
+                blank=True,
+                help_text='Base 64-encoded image with a resolution of minimum 100x100 px. E.g. "data:image/png;base64,[...]"',
+                null=True
+                ),
+            ),
+        ]

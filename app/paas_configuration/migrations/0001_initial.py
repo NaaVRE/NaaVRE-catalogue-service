@@ -8,17 +8,26 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-    ]
+        ]
 
     operations = [
         migrations.CreateModel(
             name='PaasConfiguration',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(
+                    auto_created=True, primary_key=True, serialize=False,
+                    verbose_name='ID'
+                    )),
                 ('title', models.CharField(max_length=100, null=True)),
-                ('description', models.TextField(help_text='Markdown-formatted description of the platform', null=True)),
+                ('description', models.TextField(
+                    help_text='Markdown-formatted description of the platform',
+                    null=True
+                    )),
                 ('documentation_url', models.URLField(blank=True, null=True)),
-                ('site_icon', models.TextField(help_text='Base 64-encoded image with a resolution of minimum 200x200 px. E.g. "data:image/png;base64,[...]"', null=True)),
-            ],
-        ),
-    ]
+                ('site_icon', models.TextField(
+                    help_text='Base 64-encoded image with a resolution of minimum 200x200 px. E.g. "data:image/png;base64,[...]"',
+                    null=True
+                    )),
+                ],
+            ),
+        ]
