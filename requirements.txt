@@ -2,7 +2,7 @@ Django==5.1.7
 django-cors-headers==4.7.0
 djangorestframework==3.16.0
 PyJWT[crypto]==2.10.1
-requests==2.32.3
+requests==2.32.4
 whitenoise==6.9.0
 gunicorn==23.0.0
 django-filter==25.1
