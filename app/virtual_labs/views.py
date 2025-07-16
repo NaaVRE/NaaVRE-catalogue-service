@@ -23,4 +23,5 @@ class VirtualLabViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_fields = ['slug', 'title']
     search_fields = ['title', 'description']
     ordering_fields = ['slug', 'title', 'created', 'modified']
+    ordering = ['title']
     pagination_class = VirtualLabPagination
