@@ -67,7 +67,7 @@ class Conf(models.Model):
 
 
 class Param(BaseVariable):
-    default_value = models.TextField(blank=True)
+    default_value = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f'{self.name} ({self.type}, {self.default_value})'

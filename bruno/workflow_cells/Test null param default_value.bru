@@ -1,0 +1,63 @@
+meta {
+  name: Test null param default_value
+  type: http
+  seq: 25
+}
+
+post {
+  url: {{baseUrl}}/workflow-cells/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+body:json {
+  {
+    "virtual_lab": "test-virtual-lab-1",
+    "title": "test-cell-null-default-value",
+    "description": "",
+    "container_image": "test-image-2",
+    "base_container_image": {
+      "build": "test-build-2",
+      "runtime": "test-runtime-2"
+    },
+    "dependencies": [],
+    "inputs": [],
+    "outputs": [],
+    "confs": [],
+    "params": [
+      {
+        "name": "test_param_null",
+        "type": "str",
+        "default_value": null
+      }
+    ],
+    "secrets": [],
+    "kernel": "",
+    "source_url": ""
+  }
+}
+
+script:post-response {
+  try {
+    uuid = res.getBody().url.replace(/.*\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/$/, "$1")
+    bru.setVar('validCellUUID', uuid)
+    bru.setVar('invalidCellUUID', require("uuid").v4());
+  }
+  catch (e) {
+    console.log(e)
+  }
+}
+
+tests {
+  test("Status code is 201", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+  test("JSON response is valid", function () {
+    var jsonData = res.getBody();
+    expect(jsonData.url).is.not.null;
+  });
+}
