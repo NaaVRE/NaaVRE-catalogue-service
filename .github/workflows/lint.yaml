@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Python and install dependencies from requirements.txt
         uses: actions/setup-python@v5
