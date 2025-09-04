@@ -52,10 +52,35 @@
     }
   },
   {
+    "model": "virtual_labs.virtuallablabel",
+    "pk": 1,
+    "fields": {
+      "title": "label-1",
+      "color": "#a2eeef"
+    }
+  },
+  {
+    "model": "virtual_labs.virtuallablabel",
+    "pk": 2,
+    "fields": {
+      "title": "label-2",
+      "color": "#008672"
+    }
+  },
+  {
+    "model": "virtual_labs.virtuallablabel",
+    "pk": 3,
+    "fields": {
+      "title": "label-3",
+      "color": "#ffffff"
+    }
+  },
+  {
     "model": "virtual_labs.virtuallab",
     "pk": "fixture-virtual-lab-1",
     "fields": {
       "title": "fixture-virtual-lab-1",
+      "labels": [],
       "description": "",
       "created": "2024-10-16T13:05:39.474Z",
       "modified": "2024-10-16T13:05:39.474Z",
@@ -68,6 +93,10 @@
     "pk": "test-virtual-lab-1",
     "fields": {
       "title": "test-virtual-lab-1",
+      "labels": [
+        1,
+        2
+      ],
       "description": "",
       "created": "2024-10-16T13:05:39.474Z",
       "modified": "2024-10-16T13:05:39.474Z",
@@ -80,6 +109,10 @@
     "pk": "test-virtual-lab-2",
     "fields": {
       "title": "test-virtual-lab-2",
+      "labels": [
+        2,
+        3
+      ],
       "description": "",
       "created": "2024-10-16T13:05:39.474Z",
       "modified": "2024-10-16T13:05:39.474Z",

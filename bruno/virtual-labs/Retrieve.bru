@@ -20,10 +20,20 @@ tests {
   });
   test("JSON response is valid", function () {
       var jsonData = res.getBody();
-      expect(jsonData).to.include({
+      expect(jsonData).to.deep.include({
         // "url": "http://localhost:8000/virtual-labs/test-virtual-lab-1/",
         "slug": "test-virtual-lab-1",
         "title": "test-virtual-lab-1",
+        "labels": [
+          {
+            "title": "label-1",
+            "color": "#a2eeef"
+          },
+          {
+            "title": "label-2",
+            "color": "#008672"
+          }
+        ],
         "description": "",
         // "created": "2024-10-16T13:05:39.474000Z",
         // "modified": "2024-10-16T13:05:39.474000Z",
