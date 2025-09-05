@@ -1,7 +1,7 @@
 meta {
-  name: Create new partial
+  name: Create new version
   type: http
-  seq: 2
+  seq: 3
 }
 
 post {
@@ -18,14 +18,15 @@ body:json {
   {
     "virtual_lab": "test-virtual-lab-1",
     "title": "test-cell-3",
-    "container_image": "test-image-3"
+    "container_image": "test-image-3",
+    "version": 2
   }
 }
 
 script:post-response {
   try {
     const uuid = res.getBody().url.replace(/.*\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/$/, "$1")
-    bru.setVar('otherValidCellUUIDv1', uuid)
+    bru.setVar('otherValidCellUUIDv2', uuid)
   }
   catch (e) {
     console.log(e)

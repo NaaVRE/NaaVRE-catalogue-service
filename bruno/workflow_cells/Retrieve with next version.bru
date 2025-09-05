@@ -1,12 +1,12 @@
 meta {
-  name: Create new partial
+  name: Retrieve with next version
   type: http
-  seq: 2
+  seq: 18
 }
 
-post {
-  url: {{baseUrl}}/workflow-cells/
-  body: json
+get {
+  url: {{baseUrl}}/workflow-cells/{{otherValidCellUUIDv1}}/
+  body: none
   auth: bearer
 }
 
@@ -14,30 +14,16 @@ auth:bearer {
   token: {{ourJWT}}
 }
 
-body:json {
-  {
-    "virtual_lab": "test-virtual-lab-1",
-    "title": "test-cell-3",
-    "container_image": "test-image-3"
-  }
-}
-
-script:post-response {
-  try {
-    const uuid = res.getBody().url.replace(/.*\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/$/, "$1")
-    bru.setVar('otherValidCellUUIDv1', uuid)
-  }
-  catch (e) {
-    console.log(e)
-  }
-}
-
 tests {
-  test("Status code is 201", function () {
-    expect(res.getStatus()).to.equal(201);
+  test("Status code is 200", function () {
+    expect(res.getStatus()).to.equal(200);
   });
+  
+  
+  
   test("JSON response is valid", function () {
     var jsonData = res.getBody();
+    const nextVersionUrl = `${bru.getEnvVar("baseUrl")}/workflow-cells/${bru.getVar("otherValidCellUUIDv2")}/`;
     expect(jsonData).to.deep.include({
       "owner": "test-user-2",
       "virtual_lab": "test-virtual-lab-1",
@@ -50,9 +36,11 @@ tests {
       "secrets": [],
       "title": "test-cell-3",
       "description": "",
+      "version": 1,
       "container_image": "test-image-3",
       "kernel": "",
-      "source_url": ""
+      "source_url": "",
+      "next_version": nextVersionUrl
     });
     expect(jsonData.url).is.not.null;
     expect(jsonData.created).is.not.null;

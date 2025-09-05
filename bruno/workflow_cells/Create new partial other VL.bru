@@ -1,7 +1,7 @@
 meta {
   name: Create new partial other VL
   type: http
-  seq: 3
+  seq: 5
 }
 
 post {
@@ -24,7 +24,7 @@ body:json {
 
 script:post-response {
   try {
-    uuid = res.getBody().url.replace(/.*\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/$/, "$1")
+    const uuid = res.getBody().url.replace(/.*\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/$/, "$1")
     bru.setVar('otherVLValidCellUUID', uuid)
   }
   catch (e) {

@@ -1,17 +1,17 @@
 meta {
-  name: List ordering desc
+  name: List all_versions=false
   type: http
-  seq: 13
+  seq: 10
 }
 
 get {
-  url: {{baseUrl}}/workflow-cells/?ordering=-modified
+  url: {{baseUrl}}/workflow-cells/?all_versions=false
   body: none
   auth: bearer
 }
 
 params:query {
-  ordering: -modified
+  all_versions: false
 }
 
 auth:bearer {
@@ -26,6 +26,5 @@ tests {
       var jsonData = res.getBody();
       // We expect the element created at "Create new"
       expect(jsonData.count).to.eq(3);
-      expect(jsonData.results[0].title).to.eq('test-cell-other-lab-4');
   });
 }
