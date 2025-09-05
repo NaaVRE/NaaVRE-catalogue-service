@@ -109,3 +109,6 @@ class Cell(BaseAsset):
                    'https://github.com/me/my-NaaVRE-cells/tree'
                    '/2934de123c74316dc45fe84d340a7ca6914b8bc1/my-cell-1)'),
         )
+
+    def __str__(self):
+        return f'{super().__str__()} (v{self.version})'
