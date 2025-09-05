@@ -9,6 +9,14 @@ class CellViewSet(BaseAssetViewSet):
     serializer_class = serializers.CellSerializer
     model_class = models.Cell
 
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset()
+        if self.action == 'list':
+            all_versions = self.request.query_params.get('all_versions')
+            if not (all_versions and all_versions.lower() == 'true'):
+                qs = qs.exclude(next_version__isnull=False)
+        return qs
+
     def destroy(self, request, *args, **kwargs):
         # List instances of nested fields
         instance = self.get_object()

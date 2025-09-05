@@ -1,11 +1,11 @@
 meta {
-  name: Create new partial
+  name: Link new version
   type: http
-  seq: 2
+  seq: 4
 }
 
-post {
-  url: {{baseUrl}}/workflow-cells/
+patch {
+  url: {{baseUrl}}/workflow-cells/{{otherValidCellUUIDv1}}/
   body: json
   auth: bearer
 }
@@ -16,25 +16,13 @@ auth:bearer {
 
 body:json {
   {
-    "virtual_lab": "test-virtual-lab-1",
-    "title": "test-cell-3",
-    "container_image": "test-image-3"
-  }
-}
-
-script:post-response {
-  try {
-    const uuid = res.getBody().url.replace(/.*\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/$/, "$1")
-    bru.setVar('otherValidCellUUIDv1', uuid)
-  }
-  catch (e) {
-    console.log(e)
+    "next_version": "{{baseUrl}}/workflow-cells/{{otherValidCellUUIDv2}}/"
   }
 }
 
 tests {
   test("Status code is 201", function () {
-    expect(res.getStatus()).to.equal(201);
+    expect(res.getStatus()).to.equal(200);
   });
   test("JSON response is valid", function () {
     var jsonData = res.getBody();

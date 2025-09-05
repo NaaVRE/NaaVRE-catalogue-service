@@ -2,7 +2,31 @@ from django.contrib import admin
 
 from . import models
 
-admin.site.register(models.Cell)
+
+class CellAdmin(admin.ModelAdmin):
+    list_display = [
+        "__str__",
+        "owner",
+        "virtual_lab",
+        "version",
+        "next_version",
+        "created",
+        "modified",
+        ]
+    list_display_links = [
+        "__str__",
+        "owner",
+        "virtual_lab",
+        "next_version",
+        ]
+    list_filter = [
+        "owner",
+        "virtual_lab",
+        "next_version",
+        ]
+
+
+admin.site.register(models.Cell, CellAdmin)
 admin.site.register(models.Input)
 admin.site.register(models.Output)
 admin.site.register(models.Conf)

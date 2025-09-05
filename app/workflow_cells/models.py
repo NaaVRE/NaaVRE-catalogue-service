@@ -78,6 +78,11 @@ class Secret(BaseVariable):
 
 
 class Cell(BaseAsset):
+    version = models.IntegerField(default=1)
+    next_version = models.ForeignKey(
+        "self", on_delete=models.SET_NULL,
+        null=True, blank=True,
+        )
     container_image = models.CharField(
         max_length=384,
         help_text=('Containerized cell image (example: '
@@ -104,3 +109,6 @@ class Cell(BaseAsset):
                    'https://github.com/me/my-NaaVRE-cells/tree'
                    '/2934de123c74316dc45fe84d340a7ca6914b8bc1/my-cell-1)'),
         )
+
+    def __str__(self):
+        return f'{super().__str__()} (v{self.version})'
