@@ -1,6 +1,6 @@
 from django.db import models
 
-from base_assets.models import BaseAsset
+from base_assets.models import BaseAsset, VersioningMixin
 
 
 class BaseImage(models.Model):
@@ -77,12 +77,7 @@ class Secret(BaseVariable):
     pass
 
 
-class Cell(BaseAsset):
-    version = models.IntegerField(default=1)
-    next_version = models.ForeignKey(
-        "self", on_delete=models.SET_NULL,
-        null=True, blank=True,
-        )
+class Cell(BaseAsset, VersioningMixin):
     container_image = models.CharField(
         max_length=384,
         help_text=('Containerized cell image (example: '

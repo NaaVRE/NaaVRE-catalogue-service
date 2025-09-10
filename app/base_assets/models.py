@@ -6,6 +6,17 @@ from django.db import models
 from virtual_labs.models import VirtualLab
 
 
+class VersioningMixin(models.Model):
+    version = models.IntegerField(default=1)
+    next_version = models.ForeignKey(
+        "self", on_delete=models.SET_NULL,
+        null=True, blank=True,
+        )
+
+    class Meta:
+        abstract = True
+
+
 class BaseAsset(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255)

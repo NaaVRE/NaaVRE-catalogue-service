@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework import permissions
@@ -31,7 +32,25 @@ class BaseAssetViewSet(viewsets.ModelViewSet):
     model_class: models.Model | None = None
 
     def get_queryset(self, *args, **kwargs):
-        return self.model_class.objects.all().filter(owner=self.request.user)
+        # 1. Include filters
+        q_include = Q()
+
+        # owned by the user
+        q_include |= Q(owner=self.request.user)
+
+        # 2. Exclusion filters
+        q_exclude = Q()
+
+        # non-current versions
+        if hasattr(self.model_class, 'next_version'):
+            if self.action == 'list':
+                all_versions = self.request.query_params.get('all_versions')
+                if not (all_versions and all_versions.lower() == 'true'):
+                    q_exclude |= Q(next_version__isnull=False)
+
+        queryset = self.model_class.objects.filter(q_include).exclude(q_exclude)
+
+        return queryset
 
     def _get_virtual_lab(self):
         try:
