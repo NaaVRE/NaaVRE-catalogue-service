@@ -13,12 +13,6 @@ class CellAdmin(admin.ModelAdmin):
         "created",
         "modified",
         ]
-    list_display_links = [
-        "__str__",
-        "owner",
-        "virtual_lab",
-        "next_version",
-        ]
     list_filter = [
         "owner",
         "virtual_lab",
