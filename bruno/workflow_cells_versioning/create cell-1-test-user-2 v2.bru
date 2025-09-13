@@ -1,5 +1,5 @@
 meta {
-  name: Create new version
+  name: create cell-1-test-user-2 v2
   type: http
   seq: 3
 }
@@ -17,8 +17,8 @@ auth:bearer {
 body:json {
   {
     "virtual_lab": "test-virtual-lab-1",
-    "title": "test-cell-3",
-    "container_image": "test-image-3",
+    "title": "cell-1-test-user-2",
+    "container_image": "image",
     "version": 2
   }
 }
@@ -26,7 +26,7 @@ body:json {
 script:post-response {
   try {
     const uuid = res.getBody().url.replace(/.*\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/$/, "$1")
-    bru.setVar('otherValidCellUUIDv2', uuid)
+    bru.setVar('cell-1-test-user-2-v2-uuid', uuid)
   }
   catch (e) {
     console.log(e)
@@ -49,9 +49,9 @@ tests {
       "confs": [],
       "params": [],
       "secrets": [],
-      "title": "test-cell-3",
+      "title": "cell-1-test-user-2",
       "description": "",
-      "container_image": "test-image-3",
+      "container_image": "image",
       "kernel": "",
       "source_url": ""
     });

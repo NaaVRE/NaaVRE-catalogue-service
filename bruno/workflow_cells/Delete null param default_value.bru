@@ -1,12 +1,12 @@
 meta {
-  name: Test null param default_value
+  name: Delete null param default_value
   type: http
-  seq: 25
+  seq: 26
 }
 
-post {
-  url: {{baseUrl}}/workflow-cells/
-  body: json
+delete {
+  url: {{baseUrl}}/workflow-cells/{{nullParamDefaultValueCellUUID}}/
+  body: none
   auth: bearer
 }
 
@@ -41,22 +41,9 @@ body:json {
   }
 }
 
-script:post-response {
-  try {
-    const uuid = res.getBody().url.replace(/.*\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/$/, "$1")
-    bru.setVar('nullParamDefaultValueCellUUID', uuid)
-  }
-  catch (e) {
-    console.log(e)
-  }
-}
-
 tests {
   test("Status code is 201", function () {
-    expect(res.getStatus()).to.equal(201);
+    expect(res.getStatus()).to.equal(204);
   });
-  test("JSON response is valid", function () {
-    var jsonData = res.getBody();
-    expect(jsonData.url).is.not.null;
-  });
+  
 }

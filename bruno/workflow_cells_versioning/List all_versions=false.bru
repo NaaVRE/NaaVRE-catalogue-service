@@ -1,17 +1,17 @@
 meta {
-  name: List filter VL
+  name: List all_versions=false
   type: http
-  seq: 7
+  seq: 10
 }
 
 get {
-  url: {{baseUrl}}/workflow-cells/?virtual_lab=test-virtual-lab-2
+  url: {{baseUrl}}/workflow-cells/?all_versions=false
   body: none
   auth: bearer
 }
 
 params:query {
-  virtual_lab: test-virtual-lab-2
+  all_versions: false
 }
 
 auth:bearer {
