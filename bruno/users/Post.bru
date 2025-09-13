@@ -1,0 +1,25 @@
+meta {
+  name: Post
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/users/4/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+body:json {
+  {}
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(405);
+  });
+}
