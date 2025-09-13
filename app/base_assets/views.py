@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models as django_models
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
@@ -10,6 +10,19 @@ from rest_framework.exceptions import ParseError, ValidationError
 from oidc_jwt_auth.authentication import OIDCAccessTokenBearerAuthentication
 from virtual_labs.models import VirtualLab
 from .permissions import IsOwner
+from . import serializers
+from . import models
+
+
+class SharingScopeViewset(viewsets.ReadOnlyModelViewSet):
+    authentication_classes = [
+        OIDCAccessTokenBearerAuthentication,
+        SessionAuthentication,
+        ]
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializers.SharingScopeSerializer
+    queryset = models.SharingScope.objects.all()
+    model_class = models.SharingScope
 
 
 class BaseAssetViewSet(viewsets.ModelViewSet):
@@ -29,7 +42,7 @@ class BaseAssetViewSet(viewsets.ModelViewSet):
     ordering_fields = ['title', 'created', 'modified']
 
     # this should be overridden by children ViewSets
-    model_class: models.Model | None = None
+    model_class: django_models.Model | None = None
 
     def get_queryset(self, *args, **kwargs):
         # 1. Include filters

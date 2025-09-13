@@ -1,0 +1,17 @@
+meta {
+  name: List unauthenticated
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/sharing-scopes/
+  body: none
+  auth: none
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(401);
+  });
+}
