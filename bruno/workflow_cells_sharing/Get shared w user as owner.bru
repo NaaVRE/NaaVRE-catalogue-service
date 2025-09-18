@@ -1,0 +1,21 @@
+meta {
+  name: Get shared w user as owner
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{baseUrl}}/workflow-cells/{{shared-cell-test-user-2-uuid}}/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+}

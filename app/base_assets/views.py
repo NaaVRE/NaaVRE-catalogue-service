@@ -9,7 +9,7 @@ from rest_framework.exceptions import ParseError, ValidationError
 
 from oidc_jwt_auth.authentication import OIDCAccessTokenBearerAuthentication
 from virtual_labs.models import VirtualLab
-from .permissions import IsOwner
+from .permissions import IsOwnerReadWriteOrSharedReadOnly
 from . import serializers
 from . import models
 
@@ -30,7 +30,7 @@ class BaseAssetViewSet(viewsets.ModelViewSet):
         OIDCAccessTokenBearerAuthentication,
         SessionAuthentication,
         ]
-    permission_classes = [permissions.IsAuthenticated, IsOwner]
+    permission_classes = [permissions.IsAuthenticated, IsOwnerReadWriteOrSharedReadOnly]
 
     filter_backends = [
         DjangoFilterBackend,
@@ -56,6 +56,8 @@ class BaseAssetViewSet(viewsets.ModelViewSet):
             shared_with_me = self.request.query_params.get('shared_with_me')
             if shared_with_me and shared_with_me.lower() == 'true':
                 q_include |= Q(shared_with_users=self.request.user)
+        elif self.action == 'retrieve':
+            q_include |= Q(shared_with_users=self.request.user)
 
         # shared within scopes
         if self.action == 'list':
@@ -63,6 +65,8 @@ class BaseAssetViewSet(viewsets.ModelViewSet):
             if shared_with_scopes:
                 for scope_slug in shared_with_scopes.split(','):
                     q_include |= Q(shared_with_scopes__slug=scope_slug)
+        elif self.action == 'retrieve':
+            q_include |= Q(shared_with_scopes__isnull=False)
 
         # 2. Exclusion filters
         q_exclude = Q()
