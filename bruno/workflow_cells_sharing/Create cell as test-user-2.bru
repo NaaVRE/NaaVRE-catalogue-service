@@ -1,0 +1,61 @@
+meta {
+  name: Create cell as test-user-2
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/workflow-cells/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+body:json {
+  {
+    "virtual_lab": "test-virtual-lab-1",
+    "title": "shared-cell-test-user-2",
+    "container_image": "image"
+  }
+}
+
+script:post-response {
+  try {
+    const uuid = res.getBody().url.replace(/.*\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/$/, "$1")
+    bru.setVar('shared-cell-test-user-2-uuid', uuid)
+  }
+  catch (e) {
+    console.log(e)
+  }
+}
+
+tests {
+  test("Status code is 201", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+  test("JSON response is valid", function () {
+    var jsonData = res.getBody();
+    expect(jsonData).to.deep.include({
+      "owner": "test-user-2",
+      "virtual_lab": "test-virtual-lab-1",
+      "base_container_image": null,
+      "dependencies": [],
+      "inputs": [],
+      "outputs": [],
+      "confs": [],
+      "params": [],
+      "secrets": [],
+      "title": "shared-cell-test-user-2",
+      "description": "",
+      "container_image": "image",
+      "kernel": "",
+      "source_url": ""
+    });
+    expect(jsonData.url).is.not.null;
+    expect(jsonData.created).is.not.null;
+    expect(jsonData.modified).is.not.null;
+  });
+}

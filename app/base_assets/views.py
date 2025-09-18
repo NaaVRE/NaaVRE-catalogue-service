@@ -51,6 +51,19 @@ class BaseAssetViewSet(viewsets.ModelViewSet):
         # owned by the user
         q_include |= Q(owner=self.request.user)
 
+        # shared with the user
+        if self.action == 'list':
+            shared_with_me = self.request.query_params.get('shared_with_me')
+            if shared_with_me and shared_with_me.lower() == 'true':
+                q_include |= Q(shared_with_users=self.request.user)
+
+        # shared within scopes
+        if self.action == 'list':
+            shared_with_scopes = self.request.query_params.get('shared_with_scopes')
+            if shared_with_scopes:
+                for scope_slug in shared_with_scopes.split(','):
+                    q_include |= Q(shared_with_scopes__slug=scope_slug)
+
         # 2. Exclusion filters
         q_exclude = Q()
 

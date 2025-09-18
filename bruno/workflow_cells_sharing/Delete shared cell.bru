@@ -1,0 +1,21 @@
+meta {
+  name: Delete shared cell
+  type: http
+  seq: 18
+}
+
+delete {
+  url: {{baseUrl}}/workflow-cells/{{shared-cell-test-user-2-uuid}}/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+tests {
+  test("Status code is 204", function () {
+      expect(res.getStatus()).to.equal(204);
+  });
+}
