@@ -3,4 +3,10 @@ from django.contrib import admin
 from . import models
 
 
-admin.site.register(models.SharingScope)
+@admin.register(models.SharingScope)
+class SharingScopeAdmin(admin.ModelAdmin):
+    list_display = [
+        "slug",
+        "title",
+        "label"
+        ]
