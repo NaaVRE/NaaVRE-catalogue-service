@@ -1,11 +1,11 @@
 meta {
-  name: Link new version
+  name: create cell-1-test-user-2 v1
   type: http
-  seq: 4
+  seq: 1
 }
 
-patch {
-  url: {{baseUrl}}/workflow-cells/{{otherValidCellUUIDv1}}/
+post {
+  url: {{baseUrl}}/workflow-cells/
   body: json
   auth: bearer
 }
@@ -16,13 +16,25 @@ auth:bearer {
 
 body:json {
   {
-    "next_version": "{{baseUrl}}/workflow-cells/{{otherValidCellUUIDv2}}/"
+    "virtual_lab": "test-virtual-lab-1",
+    "title": "cell-1-test-user-2",
+    "container_image": "image"
+  }
+}
+
+script:post-response {
+  try {
+    const uuid = res.getBody().url.replace(/.*\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/$/, "$1")
+    bru.setVar('cell-1-test-user-2-v1-uuid', uuid)
+  }
+  catch (e) {
+    console.log(e)
   }
 }
 
 tests {
   test("Status code is 201", function () {
-    expect(res.getStatus()).to.equal(200);
+    expect(res.getStatus()).to.equal(201);
   });
   test("JSON response is valid", function () {
     var jsonData = res.getBody();
@@ -36,9 +48,9 @@ tests {
       "confs": [],
       "params": [],
       "secrets": [],
-      "title": "test-cell-3",
+      "title": "cell-1-test-user-2",
       "description": "",
-      "container_image": "test-image-3",
+      "container_image": "image",
       "kernel": "",
       "source_url": ""
     });

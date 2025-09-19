@@ -1,21 +1,17 @@
 meta {
-  name: List all_versions=true
+  name: List shared w scope as user
   type: http
-  seq: 9
+  seq: 16
 }
 
 get {
-  url: {{baseUrl}}/workflow-cells/?all_versions=true
+  url: {{baseUrl}}/workflow-cells/
   body: none
   auth: bearer
 }
 
-params:query {
-  all_versions: true
-}
-
 auth:bearer {
-  token: {{ourJWT}}
+  token: {{notOurJWT}}
 }
 
 tests {
@@ -24,7 +20,6 @@ tests {
   });
   test("JSON response is valid", function () {
       var jsonData = res.getBody();
-      // We expect the element created at "Create new"
-      expect(jsonData.count).to.eq(4);
+      expect(jsonData.count).to.deep.eq(0);
   });
 }

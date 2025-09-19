@@ -1,0 +1,21 @@
+meta {
+  name: Get as other
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/workflow-cells/{{shared-cell-test-user-2-uuid}}/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{thirdJWT}}
+}
+
+tests {
+  test("Status code is 404", function () {
+      expect(res.getStatus()).to.equal(404);
+  });
+}

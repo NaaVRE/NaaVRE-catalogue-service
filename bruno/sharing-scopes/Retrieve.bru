@@ -1,0 +1,30 @@
+meta {
+  name: Retrieve
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/sharing-scopes/test-community-1/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  test("JSON response is valid", function () {
+      var jsonData = res.getBody();
+      expect(jsonData).to.deep.include({
+        // "url": "{{baseUrl}}/sharing-scopes/test-community-1/",
+        "title": "Test Community 1",
+        "label": "community"
+      });
+  });
+  
+}

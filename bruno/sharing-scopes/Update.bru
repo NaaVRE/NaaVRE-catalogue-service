@@ -1,0 +1,32 @@
+meta {
+  name: Update
+  type: http
+  seq: 7
+}
+
+put {
+  url: {{baseUrl}}/sharing-scopes/343c498d-6670-4ffc-81d1-f0bc7efb54a2/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+body:json {
+  {}
+}
+
+tests {
+  test("Status code is 405", function () {
+      expect(res.getStatus()).to.equal(405);
+  });
+  test("JSON response is valid", function () {
+      var jsonData = res.getBody();
+      expect(jsonData).to.eql({
+        "detail": "Method \"PUT\" not allowed."
+      });
+  });
+  
+}

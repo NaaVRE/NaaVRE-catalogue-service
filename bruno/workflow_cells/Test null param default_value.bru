@@ -1,7 +1,7 @@
 meta {
   name: Test null param default_value
   type: http
-  seq: 31
+  seq: 25
 }
 
 post {
@@ -43,9 +43,8 @@ body:json {
 
 script:post-response {
   try {
-    uuid = res.getBody().url.replace(/.*\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/$/, "$1")
-    bru.setVar('validCellUUID', uuid)
-    bru.setVar('invalidCellUUID', require("uuid").v4());
+    const uuid = res.getBody().url.replace(/.*\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/$/, "$1")
+    bru.setVar('nullParamDefaultValueCellUUID', uuid)
   }
   catch (e) {
     console.log(e)

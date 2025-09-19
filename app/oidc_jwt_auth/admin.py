@@ -1,5 +1,11 @@
 from django.contrib import admin
 
-from .models import OIDCUser
+from . import models
 
-admin.site.register(OIDCUser)
+
+@admin.register(models.OIDCUser)
+class OIDCUserAdmin(admin.ModelAdmin):
+    list_display = [
+        "user",
+        "uid",
+        ]

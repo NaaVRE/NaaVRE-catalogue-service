@@ -182,8 +182,7 @@ class CellSerializer(BaseAssetSerializer):
             many=True,
             )
         validated_data.update(nested_instances)
-        print(validated_data)
-        instance = models.Cell.objects.create(**validated_data)
+        instance = super().create(validated_data)
         for name, nested_instance in nested_instances_many.items():
             instance.__getattribute__(name).set(nested_instance)
         return instance
@@ -203,7 +202,6 @@ class CellSerializer(BaseAssetSerializer):
             many=True,
             )
         validated_data.update(nested_instances)
-        print(validated_data)
         instance = super().update(instance, validated_data)
         for name, nested_instance in nested_instances_many.items():
             instance.__getattribute__(name).set(nested_instance)

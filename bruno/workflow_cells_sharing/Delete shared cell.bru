@@ -1,11 +1,11 @@
 meta {
-  name: Delete other new version
+  name: Delete shared cell
   type: http
-  seq: 27
+  seq: 21
 }
 
 delete {
-  url: {{baseUrl}}/workflow-cells/{{otherValidCellUUIDv2}}/
+  url: {{baseUrl}}/workflow-cells/{{shared-cell-test-user-2-uuid}}/
   body: none
   auth: bearer
 }

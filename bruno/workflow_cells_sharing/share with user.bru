@@ -1,0 +1,40 @@
+meta {
+  name: share with user
+  type: http
+  seq: 7
+}
+
+patch {
+  url: {{baseUrl}}/workflow-cells/{{shared-cell-test-user-2-uuid}}/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+body:json {
+  {
+    "shared_with_scopes": [],
+    "shared_with_users": [
+      "test-user-3"
+    ]
+  }
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  test("JSON response is valid", function () {
+      var jsonData = res.getBody();
+      expect(jsonData).to.deep.include(
+        {
+          "shared_with_users": [
+            "test-user-3"
+          ]
+        }
+      )
+  });
+}

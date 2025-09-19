@@ -1,0 +1,30 @@
+meta {
+  name: List search short
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/users/?search=te
+  body: none
+  auth: bearer
+}
+
+params:query {
+  search: te
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  test("JSON response is valid", function () {
+      var jsonData = res.getBody();
+      // We expect the element created at "Create new"
+      expect(jsonData.count).to.eq(0);
+  });
+}

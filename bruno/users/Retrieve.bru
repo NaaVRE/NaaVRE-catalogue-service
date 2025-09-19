@@ -1,0 +1,21 @@
+meta {
+  name: Retrieve
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/users/4/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(405);
+  });
+}

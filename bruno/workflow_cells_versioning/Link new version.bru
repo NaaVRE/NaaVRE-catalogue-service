@@ -1,12 +1,12 @@
 meta {
-  name: Retrieve with next version
+  name: Link new version
   type: http
-  seq: 18
+  seq: 4
 }
 
-get {
-  url: {{baseUrl}}/workflow-cells/{{otherValidCellUUIDv1}}/
-  body: none
+patch {
+  url: {{baseUrl}}/workflow-cells/{{cell-1-test-user-2-v1-uuid}}/
+  body: json
   auth: bearer
 }
 
@@ -14,16 +14,18 @@ auth:bearer {
   token: {{ourJWT}}
 }
 
+body:json {
+  {
+    "next_version": "{{baseUrl}}/workflow-cells/{{cell-1-test-user-2-v2-uuid}}/"
+  }
+}
+
 tests {
-  test("Status code is 200", function () {
+  test("Status code is 201", function () {
     expect(res.getStatus()).to.equal(200);
   });
-  
-  
-  
   test("JSON response is valid", function () {
     var jsonData = res.getBody();
-    const nextVersionUrl = `${bru.getEnvVar("baseUrl")}/workflow-cells/${bru.getVar("otherValidCellUUIDv2")}/`;
     expect(jsonData).to.deep.include({
       "owner": "test-user-2",
       "virtual_lab": "test-virtual-lab-1",
@@ -34,13 +36,12 @@ tests {
       "confs": [],
       "params": [],
       "secrets": [],
-      "title": "test-cell-3",
+      "title": "cell-1-test-user-2",
       "description": "",
       "version": 1,
-      "container_image": "test-image-3",
+      "container_image": "image",
       "kernel": "",
-      "source_url": "",
-      "next_version": nextVersionUrl
+      "source_url": ""
     });
     expect(jsonData.url).is.not.null;
     expect(jsonData.created).is.not.null;

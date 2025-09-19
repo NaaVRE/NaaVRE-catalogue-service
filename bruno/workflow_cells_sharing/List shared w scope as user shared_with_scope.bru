@@ -1,0 +1,32 @@
+meta {
+  name: List shared w scope as user shared_with_scope
+  type: http
+  seq: 17
+}
+
+get {
+  url: {{baseUrl}}/workflow-cells/?shared_with_scopes=test-virtual-lab-1,other-scope
+  body: none
+  auth: bearer
+}
+
+params:query {
+  shared_with_scopes: test-virtual-lab-1,other-scope
+}
+
+auth:bearer {
+  token: {{notOurJWT}}
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  test("JSON response is valid", function () {
+      var jsonData = res.getBody();
+      expect(jsonData.count).to.deep.eq(1);
+      expect(jsonData.results[0]).to.deep.include({
+        "title": "shared-cell-test-user-2"
+      })
+  });
+}
