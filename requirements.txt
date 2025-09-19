@@ -7,4 +7,4 @@ whitenoise==6.11.0
 gunicorn==23.0.0
 django-filter==25.1
 django-probes==1.7.0
-psycopg[binary]==3.2.9
+psycopg[binary]==3.2.10
