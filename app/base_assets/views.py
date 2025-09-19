@@ -75,7 +75,7 @@ class BaseAssetViewSet(viewsets.ModelViewSet):
         if hasattr(self.model_class, 'next_version'):
             if self.action == 'list':
                 all_versions = self.request.query_params.get('all_versions')
-                if not (all_versions and all_versions.lower() == 'true'):
+                if all_versions and all_versions.lower() == 'false':
                     q_exclude |= Q(next_version__isnull=False)
 
         queryset = self.model_class.objects.filter(q_include).exclude(q_exclude)
