@@ -14,6 +14,12 @@ class SharingScope(models.Model):
         'community': 'Community',
         }
     label = models.CharField(max_length=100, choices=LABEL_CHOICES)
+    show_in_virtual_labs = models.ManyToManyField(
+        VirtualLab, related_name='visible_sharing_scopes', blank=True
+        )
+    check_in_virtual_labs = models.ManyToManyField(
+        VirtualLab, related_name='checked_sharing_scopes', blank=True
+        )
 
     def __str__(self):
         return f'{self.title} ({self.label})'
