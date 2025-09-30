@@ -80,7 +80,12 @@ class BaseAssetViewSet(viewsets.ModelViewSet):
                 if all_versions and all_versions.lower() == 'false':
                     q_exclude |= Q(next_version__isnull=False)
 
-        queryset = self.model_class.objects.filter(q_include).exclude(q_exclude)
+        queryset = (
+            self.model_class.objects
+                .filter(q_include)
+                .exclude(q_exclude)
+                .distinct()
+            )
 
         return queryset
 
