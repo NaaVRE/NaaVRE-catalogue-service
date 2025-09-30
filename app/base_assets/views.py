@@ -8,6 +8,7 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.exceptions import ParseError, ValidationError
 
 from oidc_jwt_auth.authentication import OIDCAccessTokenBearerAuthentication
+from shared.pagination import ConfigurablePagination
 from virtual_labs.models import VirtualLab
 from .permissions import IsOwnerReadWriteOrSharedReadOnly
 from . import serializers
@@ -23,6 +24,7 @@ class SharingScopeViewset(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.SharingScopeSerializer
     queryset = models.SharingScope.objects.all()
     model_class = models.SharingScope
+    pagination_class = ConfigurablePagination
 
 
 class BaseAssetViewSet(viewsets.ModelViewSet):

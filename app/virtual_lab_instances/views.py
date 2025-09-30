@@ -5,6 +5,7 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.exceptions import ValidationError
 
 from oidc_jwt_auth.authentication import OIDCAccessTokenBearerAuthentication
+from shared.pagination import ConfigurablePagination
 from virtual_labs.models import VirtualLab
 from . import models
 from . import serializers
@@ -20,6 +21,7 @@ class VirtualLabInstanceViewSet(
         SessionAuthentication,
         ]
     permission_classes = [permissions.IsAuthenticated]
+    pagination_class = ConfigurablePagination
 
     model = models.VirtualLabInstance
 
