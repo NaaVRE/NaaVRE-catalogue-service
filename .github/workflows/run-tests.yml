@@ -1,0 +1,81 @@
+name: Run tests
+
+
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        default: ubuntu-latest
+        type: string
+      debug:
+        required: true
+        type: string
+      oidc_configuration_url:
+        required: true
+        type: string
+      verify_ssl:
+        required: true
+        type: string
+      disable_auth:
+        required: true
+        type: string
+      root_path:
+        required: true
+        type: string
+      test:
+        required: true
+        type: string
+      pytest_extra_options:
+        default: ""
+        type: string
+    secrets:
+      configuration:
+        required: true
+      auth_token:
+        required: true
+      registry_token_for_tests:
+        required: true
+
+env:
+  DEBUG: ${{ inputs.debug }}
+  OIDC_CONFIGURATION_URL: ${{ inputs.oidc_configuration_url }}
+  DISABLE_AUTH: ${{ inputs.disable_auth }}
+  VERIFY_SSL: ${{ inputs.verify_ssl }}
+  ROOT_PATH: ${{ inputs.root_path }}
+  AUTH_TOKEN: ${{ secrets.auth_token }}
+  CONFIG_FILE_URL: /tmp/configuration.json
+  REGISTRY_TOKEN_FOR_TESTS: ${{ secrets.registry_token_for_tests }}
+
+jobs:
+  test:
+    runs-on: ${{ inputs.runs-on }}
+    strategy:
+      fail-fast: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: start minikube
+        id: minikube
+        uses: medyagh/setup-minikube@v0.0.19
+        with:
+          addons: ingress,ingress-dns
+
+      - name: Try the cluster
+        run: kubectl get pods -A
+
+      - name: Run setup-tests.sh
+        shell: bash -l {0}
+        run: |
+          wget https://raw.githubusercontent.com/NaaVRE/NaaVRE-helm/refs/heads/main/scripts/setup-tests.sh
+          chmod +x setup-tests.sh
+          ./setup-tests.sh -f ../values-deploy-naavre-catalogue-service-minikube-github.yaml
+          cat minkube_configuration.json
+
+      - run: |
+            pip install -r requirements.txt
+            pip install pytest
+
+      - name: pytets
+        shell: bash -l {0}
+        run: |
+          pytest ${{ inputs.test }} -s --ignore=docker --ignore=cypress --no-header --log-cli-level=DEBUG -vv --tb=long ${{ inputs.pytest_extra_options }}
