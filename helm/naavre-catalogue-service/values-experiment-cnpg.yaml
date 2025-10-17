@@ -1,0 +1,21 @@
+image:
+  tag: "v0.4.2"
+
+ingress:
+  enabled: true
+  className: "nginx"
+  hosts:
+    - host: naavre-dev.minikube.test
+      paths:
+        - path: /naavre-catalogue-service/
+          pathType: Prefix
+
+conf:
+  base_path: /naavre-catalogue-service
+  oidc_configuration_url: "https://<keycloak-host>/<keycloak-base-path>/realms/<realm>/.well-known/openid-configuration"
+  django:
+    secret_key: 'a-random-string'
+    superuser_username: "admin"
+    superuser_password: "admin"
+  verify_ssl: "false"
+  insecure_disable_auth: "true"

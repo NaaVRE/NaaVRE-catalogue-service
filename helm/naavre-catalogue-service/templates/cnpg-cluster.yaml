@@ -1,0 +1,42 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ include "naavre-catalogue-service.fullname" . }}-cnpg-db
+  labels:
+    {{- include "naavre-catalogue-service.labels" . | nindent 4 }}
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.5
+  enableSuperuserAccess: true
+  superuserSecret:
+    name: {{ include "naavre-catalogue-service.fullname" . }}-cnpg-db-superuser
+  bootstrap:
+    initdb: # Automatic migration
+      database: app
+      owner: {{ .Values.cnpgCluster.auth.app.username }}
+      secret:
+        name: {{ include "naavre-catalogue-service.fullname" . }}-cnpg-db-app
+  storage:
+    size: 8Gi
+---
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/basic-auth
+metadata:
+  name: {{ include "naavre-catalogue-service.fullname" . }}-cnpg-db-app
+  labels:
+    {{- include "naavre-catalogue-service.labels" . | nindent 4 }}
+data:
+  username: "{{ .Values.cnpgCluster.auth.app.username | default "" | b64enc }}"
+  password: "{{ .Values.cnpgCluster.auth.app.password | default "" | b64enc }}"
+---
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/basic-auth
+metadata:
+  name: {{ include "naavre-catalogue-service.fullname" . }}-cnpg-db-superuser
+  labels:
+    {{- include "naavre-catalogue-service.labels" . | nindent 4 }}
+data:
+  username: "{{ .Values.cnpgCluster.auth.superuser.username | default "" | b64enc }}"
+  password: "{{ .Values.cnpgCluster.auth.superuser.password | default "" | b64enc }}"

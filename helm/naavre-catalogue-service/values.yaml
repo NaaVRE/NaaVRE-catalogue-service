@@ -158,3 +158,12 @@ postgresql:
   metrics:
     image:
       repository: bitnamilegacy/postgres-exporter
+
+cnpgCluster:
+  auth:
+    app:
+      username: "app"
+      password: "fake-app-password"
+    superuser:
+      username: "postgres"
+      password: "fake-superuser-password"

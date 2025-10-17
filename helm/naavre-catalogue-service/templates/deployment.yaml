@@ -41,6 +41,17 @@ spec:
                 name: "{{ include "naavre-catalogue-service.fullname" . }}"
             - secretRef:
                 name: "{{ include "naavre-catalogue-service.fullname" . }}"
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "naavre-catalogue-service.fullname" . }}-cnpg-db-app
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "naavre-catalogue-service.fullname" . }}-cnpg-db-app
+                  key: password
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
