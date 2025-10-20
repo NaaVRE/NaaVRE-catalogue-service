@@ -11,11 +11,27 @@ spec:
   superuserSecret:
     name: {{ include "naavre-catalogue-service.fullname" . }}-cnpg-db-superuser
   bootstrap:
-    initdb: # Automatic migration
+    initdb:
       database: app
       owner: {{ .Values.cnpgCluster.auth.app.username }}
       secret:
         name: {{ include "naavre-catalogue-service.fullname" . }}-cnpg-db-app
+      import:
+        type: microservice
+        databases:
+          - {{ .Values.global.postgresql.auth.database }}
+        source:
+          externalCluster: bitnami-db
+  externalClusters:
+    - name: bitnami-db
+      connectionParameters:
+        host: "{{ template "postgresql.v1.primary.fullname" .Subcharts.postgresql }}"
+        sslmode: disable
+        user: {{ .Values.global.postgresql.auth.username }}
+        dbname: {{ .Values.global.postgresql.auth.database }}
+      password:
+        name: {{ include "naavre-catalogue-service.fullname" . }}-bitnami-db-user
+        key: password
   storage:
     size: 8Gi
 ---
@@ -40,3 +56,14 @@ metadata:
 data:
   username: "{{ .Values.cnpgCluster.auth.superuser.username | default "" | b64enc }}"
   password: "{{ .Values.cnpgCluster.auth.superuser.password | default "" | b64enc }}"
+---
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/basic-auth
+metadata:
+  name: {{ include "naavre-catalogue-service.fullname" . }}-bitnami-db-user
+  labels:
+    {{- include "naavre-catalogue-service.labels" . | nindent 4 }}
+data:
+  username: "{{ .Values.global.postgresql.auth.username | default "" | b64enc }}"
+  password: "{{ .Values.global.postgresql.auth.password | default "" | b64enc }}"
