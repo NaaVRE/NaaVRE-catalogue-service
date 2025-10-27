@@ -5,6 +5,6 @@ PyJWT[crypto]==2.10.1
 requests==2.32.5
 whitenoise==6.11.0
 gunicorn==23.0.0
-django-filter==25.1
+django-filter==25.2
 django-probes==1.7.0
 psycopg[binary]==3.2.12
