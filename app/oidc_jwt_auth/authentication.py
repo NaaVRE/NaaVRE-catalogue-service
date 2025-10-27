@@ -116,32 +116,47 @@ class OIDCAccessTokenBearerAuthentication(BaseAuthentication):
             raise
         return data
 
+    @staticmethod
+    def get_token_user(token_data):
+        print(token_data)
+        import sys
+        sys.stdout.flush()
+        return User(
+            username=token_data.get('preferred_username'),
+            first_name=token_data.get('given_name', ''),
+            last_name=token_data.get('family_name', token_data.get('name', '')),
+            )
+
+    @staticmethod
+    def is_user_data_equal(user1, user2):
+        return (
+            user1.username == user2.username
+            and user1.last_name == user2.last_name
+            )
+
     def get_user(self, token):
         if settings.DISABLE_AUTH:
             data = self.validate_fake_token(token)
         else:
             data = self.validate_token(token)
         uid = str(data['sub'])
+        token_user = self.get_token_user(data)
         try:
             oidc_user = OIDCUser.objects.select_related('user').get(uid=uid)
-            user = oidc_user.user
+            db_user = oidc_user.user
+            token_user.pk = db_user.pk
             # Update name
-            if data.get('name') and data.get('name') != user.last_name:
-                user.last_name = data.get('name')
-                user.save()
+            if not self.is_user_data_equal(token_user, db_user):
+                token_user.save()
         except OIDCUser.DoesNotExist:
-            if User.objects.filter(username=data.get('preferred_username')):
+            if User.objects.filter(username=token_user.username):
                 msg = ('Cannot create User. A User with this username already '
                        'exists, but it is not linked to the token\'s OIDCUser')
                 raise AuthenticationFailed(msg)
-            user = User(
-                username=data.get('preferred_username'),
-                last_name=data.get('name', ''),
-                )
-            user.save()
-            oidc_user = OIDCUser(uid=uid, user=user)
+            token_user.save()
+            oidc_user = OIDCUser(uid=uid, user=token_user)
             oidc_user.save()
-        return user
+        return token_user
 
     def authenticate_header(self, request):
         return self.keyword
