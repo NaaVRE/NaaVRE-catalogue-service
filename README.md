@@ -12,16 +12,16 @@ virtualenv venv
 pip install -r requirements.txt
 ```
 
-Start the dev database
+Start the dev database and object store:
 
 ```shell
-docker run -d -p 127.0.0.1:5432:5432 -e POSTGRES_PASSWORD=fake-postgres-password --name naavre-catalogue-db postgres:17
+docker compose -f dev/docker-compose.yaml up
 ```
 
 Populate the dev database
 
 ```shell
-while read env; do export $env; done < dev.env
+while read env; do export $env; done < dev/catalogue-service.env
 python app/manage.py makemigrations
 python app/manage.py migrate
 python app/manage.py loaddata app/fixtures.json
@@ -31,7 +31,7 @@ python app/manage.py createsuperuser --no-input
 Run the dev server
 
 ```shell
-while read env; do export $env; done < dev.env
+while read env; do export $env; done < dev/catalogue-service.env
 python app/manage.py runserver
 ```
 
@@ -51,10 +51,12 @@ follow the steps starting from “Start the dev database”.
 
 ## Running with Docker
 
+[//]: # (TODO: add S3 instruction or remove)
+
 ```shell
 docker network create testing
 docker run -d --name db --network testing -e POSTGRES_PASSWORD=fake-postgres-password postgres:17
-docker run --network testing -p 127.0.0.1:8000:8000 --env-file dev.env -e DB_HOST=db ghcr.io/naavre/naavre-catalogue-service:latest
+docker run --network testing -p 127.0.0.1:8000:8000 --env-file dev/catalogue-service.env -e DB_HOST=db ghcr.io/naavre/naavre-catalogue-service:latest
 ```
 
 ## Deploying with Helm
