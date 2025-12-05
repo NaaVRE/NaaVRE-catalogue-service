@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_probes',
     'django_filters',
+    'file_assets',
     'base_assets',
     'oidc_jwt_auth',
     'paas_configuration',
@@ -85,6 +86,27 @@ DATABASES = {
         }
     }
 
+# Media storage
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "endpoint_url": os.environ['S3_ENDPOINT_URL'],
+            "bucket_name": os.environ['S3_BUCKET_NAME'],
+            "access_key": os.environ['S3_ACCESS_KEY'],
+            "secret_key": os.environ['S3_SECRET_KEY'],
+            "querystring_expire": 600,
+            "file_overwrite": False,
+            },
+        },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
