@@ -1,4 +1,3 @@
-from botocore.exceptions import EndpointConnectionError
 from django.core.exceptions import ImproperlyConfigured
 from django.core.files.storage import default_storage
 from storages.backends.s3 import S3Storage
