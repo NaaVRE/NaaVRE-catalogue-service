@@ -1,7 +1,6 @@
 import datetime
 from django.core.management.base import BaseCommand
 from django.utils import timezone
-from storages.backends.s3 import S3Storage
 
 from file_assets.models import FileAssetCreationRequest
 from file_assets.services.s3storage import S3StorageService

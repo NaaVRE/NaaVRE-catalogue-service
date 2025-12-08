@@ -1,7 +1,7 @@
-from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.files.storage import default_storage
 from storages.backends.s3 import S3Storage
+
 
 class S3StorageService:
     storage: S3Storage
@@ -14,7 +14,6 @@ class S3StorageService:
                 'enable presigned upload.'
                 )
         self.storage = default_storage
-
 
     def generate_presigned_upload_url(
             self, filename, content_type, expire=None

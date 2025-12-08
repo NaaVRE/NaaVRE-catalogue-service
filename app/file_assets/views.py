@@ -1,4 +1,4 @@
-from rest_framework import status, viewsets
+from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 import uuid
@@ -29,7 +29,7 @@ class FileAssetViewSet(BaseAssetViewSet):
         Return example:
             {
                 "key": "files/383fecda-bc11-418c-ae81-d277c1bfd0d9_example.ipynb",
-                "url": "http://localhost:9000/dev-bucket/files/383fecda-bc11-418c-ae81-d277c1bfd0d9_example.ipynb?AWSAccessKeyId=..."
+                "url": "http://localhost:9000/dev-bucket/files/383fecda-bc11-418c-ae81-d277c1bfd0d9_example.ipynb?...
             }
         """
         serializer = serializers.PresignRequestSerializer(data=request.data)
