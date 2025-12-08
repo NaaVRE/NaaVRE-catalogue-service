@@ -1,0 +1,21 @@
+meta {
+  name: retrieve 404
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{baseUrl}}/notebook-files/{{file-upload-flow-invalid-uuid}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+tests {
+  test("Status code is 404", function () {
+      expect(res.getStatus()).to.equal(404);
+  });
+}

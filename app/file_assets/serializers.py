@@ -26,14 +26,17 @@ class FileAssetSerializer(BaseAssetSerializer):
         validators=[key_exists_in_s3, key_does_not_exist_in_db],
         )
 
-    class Meta:
-        model = models.FileAsset
-        fields = ['id', 'file', 'key']
-        read_only_fields = ['id', 'file']
+    class Meta(BaseAssetSerializer.Meta):
+        read_only_fields = ['file']
 
     def create(self, validated_data):
         key = validated_data.pop('key')
-        file = models.FileAsset(**validated_data)
+        model_class = self.Meta.model
+        if model_class is None:
+            raise RuntimeError(
+                "Meta.model must be set on FileAssetSerializer subclass"
+                )
+        file = model_class(**validated_data)
         file.file.name = key
         file.save()
         return file

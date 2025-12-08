@@ -1,0 +1,30 @@
+meta {
+  name: create unauthenticated
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/notebook-files/
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "virtual_lab": "test-virtual-lab-1",
+    "title": "notebook-file-1",
+    "key": "{{file-upload-flow-key}}"
+  }
+  
+}
+
+tests {
+  test("Status code is 401", function () {
+      expect(res.getStatus()).to.equal(401);
+  });
+}
+
+settings {
+  encodeUrl: true
+}
