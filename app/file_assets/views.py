@@ -53,7 +53,17 @@ class FileAssetViewSet(BaseAssetViewSet):
             content_type,
             )
 
+        models.FileAssetCreationRequest.objects.create(file=key)
+
         return Response({
             "key": key,
             "url": url,
         })
+
+    def perform_create(self, serializer):
+        super().perform_create(serializer)
+        related_creation_request = models.FileAssetCreationRequest.objects.filter(
+            file=serializer.validated_data['key']
+            )
+        if related_creation_request:
+            related_creation_request.delete()
