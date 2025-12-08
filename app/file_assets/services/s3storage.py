@@ -1,3 +1,4 @@
+from botocore.exceptions import EndpointConnectionError
 from django.core.exceptions import ImproperlyConfigured
 from django.core.files.storage import default_storage
 from storages.backends.s3 import S3Storage
@@ -37,3 +38,6 @@ class S3StorageService:
 
     def exists(self, key):
         return self.storage.exists(key)
+
+    def check_connection(self):
+        self.storage.connection.meta.client.head_bucket(Bucket=self.storage.bucket.name)
