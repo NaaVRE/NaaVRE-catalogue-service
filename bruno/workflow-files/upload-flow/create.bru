@@ -1,0 +1,45 @@
+meta {
+  name: create
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/workflow-files/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+body:json {
+  {
+    "virtual_lab": "test-virtual-lab-1",
+    "title": "workflow-file-1",
+    "key": "{{file-upload-flow-key}}"
+  }
+  
+}
+
+script:post-response {
+  try {
+    const uuid = res.getBody().url.replace(/.*\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/$/, "$1")
+    bru.setVar('file-upload-flow-valid-uuid', uuid)
+    bru.setVar('file-upload-flow-invalid-uuid', require("uuid").v4());
+  }
+  catch (e) {
+    console.log(e)
+  }
+}
+
+tests {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+}
+
+settings {
+  encodeUrl: true
+}

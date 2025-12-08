@@ -1,0 +1,28 @@
+meta {
+  name: presign unauthenticated
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/workflow-files/presign/
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "filename": "test-workflow.naavrewf",
+    "content_type": "{{file-upload-flow-content-type}}"
+  }
+}
+
+tests {
+  test("Status code is 401", function () {
+      expect(res.getStatus()).to.equal(401);
+  });
+}
+
+settings {
+  encodeUrl: true
+}

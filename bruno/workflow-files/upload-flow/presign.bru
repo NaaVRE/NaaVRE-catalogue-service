@@ -1,0 +1,53 @@
+meta {
+  name: presign
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/workflow-files/presign/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+body:json {
+  {
+    "filename": "test-workflow.naavrewf",
+    "content_type": "{{file-upload-flow-content-type}}"
+  }
+}
+
+script:pre-request {
+  try {
+    bru.setVar('file-upload-flow-content-type', 'application/json')
+  }
+  catch (e) {
+    console.log(e)
+  }
+}
+
+script:post-response {
+  try {
+    bru.setVar('file-upload-flow-url', res.getBody().url)
+    bru.setVar('file-upload-flow-key', res.getBody().key)
+    console.log(res.getBody().url)
+    console.log(bru.getVar('file-upload-flow-url'))
+  }
+  catch (e) {
+    console.log(e)
+  }
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,54 @@
+meta {
+  name: upload
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{file-upload-flow-url}}
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "chart": {
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "scale": 1,
+      "nodes": {},
+      "links": {},
+      "selected": {},
+      "hovered": {}
+    }
+  }
+}
+
+body:text {
+  {
+    "chart": {
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "scale": 1,
+      "nodes": {},
+      "links": {},
+      "selected": {},
+      "hovered": {}
+    }
+  }
+
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+}
+
+settings {
+  encodeUrl: false
+}
