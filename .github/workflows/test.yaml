@@ -24,11 +24,9 @@ jobs:
         run: |
           docker run --rm -d \
             --name app \
-            --network naavre-catalogue-service-dev_default \
-            -p 8000:8000 \
+            --network host \
+            -p '127.0.0.1:8000:8000' \
             --env-file ./dev/catalogue-service.env \
-            -e DB_HOST=db \
-            -e S3_ENDPOINT_URL=http://s3:9000 \
             --health-cmd "python -c 'import requests; requests.get(\"http://localhost:8000/NaaVRE-catalogue-service/\").raise_for_status()'" \
             --health-interval 10s \
             app:ci-test-build
