@@ -1,0 +1,48 @@
+meta {
+  name: retrieve
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/workflow-files/{{file-upload-flow-valid-uuid}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+script:post-response {
+  try {
+    bru.setVar('file-download-flow-url', res.getBody().file)
+    console.log(bru.getVar('file-download-flow-url'))
+  }
+  catch (e) {
+    console.log(e)
+  }
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  test("JSON response is valid", function () {
+    var jsonData = res.getBody();
+    expect(jsonData).to.deep.include({
+      // "url": "http://localhost:8000/NaaVRE-catalogue-service/workflow-files/d8d8dccc-40c9-48f9-aa6c-bcdeb635be57/",
+      "owner": "test-user-2",
+      "virtual_lab": "test-virtual-lab-1",
+      "shared_with_scopes": [],
+      "shared_with_users": [],
+      "title": "workflow-file-1",
+      "description": "",
+      // "created": "2025-12-08T09:05:51.417824Z",
+      // "modified": "2025-12-08T09:05:51.434693Z",
+      // "file": "http://localhost:9000/dev-bucket/files/2d9a83d1-78da-4972-937d-05e0b94385af_test-workflow.naavrewf?AWSAccessKeyId=fake-s3-access-key&Signature=n5tq6RTJnaefxuqQTEmKxiOoGPY%3D&Expires=1765185367",
+      "version": 1,
+      "next_version": null
+    });
+  });
+}

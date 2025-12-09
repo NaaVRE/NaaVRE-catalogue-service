@@ -1,0 +1,38 @@
+meta {
+  name: download
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{file-download-flow-url}}
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  test("Retrieved file is valid", function () {
+    var jsonData = res.getBody();
+    expect(jsonData).to.deep.include({
+      "cells": [
+        {
+          "cell_type": "markdown",
+          "metadata": {},
+          "source": [
+            "# It works!"
+          ]
+        }
+      ],
+      "metadata": {},
+      "nbformat": 4,
+      "nbformat_minor": 5
+    });
+  });
+}
+
+settings {
+  encodeUrl: false
+}

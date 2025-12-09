@@ -12,16 +12,16 @@ virtualenv venv
 pip install -r requirements.txt
 ```
 
-Start the dev database
+Start the dev database and object store:
 
 ```shell
-docker run -d -p 127.0.0.1:5432:5432 -e POSTGRES_PASSWORD=fake-postgres-password --name naavre-catalogue-db postgres:17
+docker compose -f dev/docker-compose.yaml up
 ```
 
 Populate the dev database
 
 ```shell
-while read env; do export $env; done < dev.env
+while read env; do export $env; done < dev/catalogue-service.env
 python app/manage.py makemigrations
 python app/manage.py migrate
 python app/manage.py loaddata app/fixtures.json
@@ -31,7 +31,7 @@ python app/manage.py createsuperuser --no-input
 Run the dev server
 
 ```shell
-while read env; do export $env; done < dev.env
+while read env; do export $env; done < dev/catalogue-service.env
 python app/manage.py runserver
 ```
 
@@ -49,15 +49,34 @@ bru run --env localhost
 follow the steps starting from “Start the dev database”.
 
 
-## Running with Docker
+## Deploying with Helm
 
-```shell
-docker network create testing
-docker run -d --name db --network testing -e POSTGRES_PASSWORD=fake-postgres-password postgres:17
-docker run --network testing -p 127.0.0.1:8000:8000 --env-file dev.env -e DB_HOST=db ghcr.io/naavre/naavre-catalogue-service:latest
+### Prerequisite
+
+Create a bucket in a S3-compatible object storage. Generate an access- and secret key with the following policy (replace `"BUCKET_NAME"` with the actual value):
+
+```json
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Action": [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:DeleteObject",
+          "s3:ListBucket"
+        ],
+        "Effect": "Allow",
+        "Resource": [
+          "arn:aws:s3:::BUCKET_NAME",
+          "arn:aws:s3:::BUCKET_NAME/*"
+        ]
+      }
+    ]
+  }
 ```
 
-## Deploying with Helm
+### Deployment
 
 Create a custom `values.yaml` file (example: [helm/naavre-catalogue-service/values-example.yaml](./helm/naavre-catalogue-service/values-example.yaml); default values: [helm/naavre-catalogue-service/values.yaml](./helm/naavre-catalogue-service/values.yaml)).
 
@@ -65,4 +84,20 @@ Deploy:
 
 ```shell
 helm -n my-ns upgrade --install naavre-catalogue-service oci://ghcr.io/naavre/charts/naavre-catalogue-service --version v0.1.1 -f values.yaml
+```
+
+## Operation
+
+### Cleaning up dangling S3 objects
+
+To create a new file asset, clients should perform three queries:
+
+1. Generate a pre-signed upload URL from `POST /{asset}/presign/`
+2. Upload the file to the bucket using the pre-signed URL
+3. Create the asset record `POST /{asset}/`
+
+If clients don't perform step 3, unreferenced files are left in the bucket. These files can be deleted by running the following command
+
+```shell
+python app/manage.py cleanup_fileassetcreationrequests
 ```

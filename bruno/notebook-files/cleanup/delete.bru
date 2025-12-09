@@ -1,0 +1,21 @@
+meta {
+  name: delete
+  type: http
+  seq: 9
+}
+
+delete {
+  url: {{baseUrl}}/notebook-files/{{file-upload-flow-valid-uuid}}/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+tests {
+  test("Status code is 204", function () {
+      expect(res.getStatus()).to.equal(204);
+  });
+}

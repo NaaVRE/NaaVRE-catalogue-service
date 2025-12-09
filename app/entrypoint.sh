@@ -9,6 +9,7 @@ cd /code/app/
 
 python manage.py collectstatic --no-input
 python manage.py wait_for_database
+python manage.py wait_for_storage
 $DEV_MODE && python manage.py makemigrations
 python manage.py migrate
 python manage.py createsuperuser --no-input || echo

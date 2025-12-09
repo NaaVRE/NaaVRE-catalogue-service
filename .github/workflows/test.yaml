@@ -16,26 +16,17 @@ jobs:
         run: |
           docker build . --file docker/Dockerfile -t app:ci-test-build
 
-      - name: Create network
+      - name: Start db and object store
         run: |
-          docker network create testing
-
-      - name: Start db
-        run: |
-          docker run --rm -d \
-            --name db \
-            --network testing \
-            -e POSTGRES_PASSWORD=fake-postgres-password \
-            postgres:17
+          docker compose -f dev/docker-compose.yaml up -d
 
       - name: Start app
         run: |
           docker run --rm -d \
             --name app \
-            --network testing \
-            -p 8000:8000 \
-            --env-file dev.env \
-            -e DB_HOST=db \
+            --network host \
+            -p '127.0.0.1:8000:8000' \
+            --env-file ./dev/catalogue-service.env \
             --health-cmd "python -c 'import requests; requests.get(\"http://localhost:8000/NaaVRE-catalogue-service/\").raise_for_status()'" \
             --health-interval 10s \
             app:ci-test-build
