@@ -85,3 +85,19 @@ Deploy:
 ```shell
 helm -n my-ns upgrade --install naavre-catalogue-service oci://ghcr.io/naavre/charts/naavre-catalogue-service --version v0.1.1 -f values.yaml
 ```
+
+## Operation
+
+### Cleaning up dangling S3 objects
+
+To create a new file asset, clients should perform three queries:
+
+1. Generate a pre-signed upload URL from `POST /{asset}/presign/`
+2. Upload the file to the bucket using the pre-signed URL
+3. Create the asset record `POST /{asset}/`
+
+If clients don't perform step 3, unreferenced files are left in the bucket. These files can be deleted by running the following command
+
+```shell
+python app/manage.py cleanup_fileassetcreationrequests
+```
