@@ -12,6 +12,11 @@ conf:
   oidc_configuration_url: "https://<keycloak-host>/<keycloak-base-path>/realms/<realm>/.well-known/openid-configuration"
   django:
     secret_key: 'a-random-string'
+  s3:
+    endpoint_url: "https://example.com:9000"
+    bucket_name: "bucket-name"
+    access_key: "an-access-key"
+    secret_key: "a-secret-key"
 
 global:
   postgresql:

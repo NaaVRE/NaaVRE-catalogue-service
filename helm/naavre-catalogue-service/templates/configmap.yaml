@@ -19,3 +19,5 @@ data:
   DB_NAME: "{{ .Values.global.postgresql.auth.database }}"
   DB_PORT: "{{ .Values.global.postgresql.service.ports.postgresql }}"
   DB_USER: "{{ .Values.global.postgresql.auth.username }}"
+  S3_ENDPOINT_URL: "{{ .Values.conf.s3.endpoint_url }}"
+  S3_BUCKET_NAME: "{{ .Values.conf.s3.bucket_name }}"

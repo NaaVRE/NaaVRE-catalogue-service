@@ -49,17 +49,34 @@ bru run --env localhost
 follow the steps starting from “Start the dev database”.
 
 
-## Running with Docker
+## Deploying with Helm
 
-[//]: # (TODO: add S3 instruction or remove)
+### Prerequisite
 
-```shell
-docker network create testing
-docker run -d --name db --network testing -e POSTGRES_PASSWORD=fake-postgres-password postgres:17
-docker run --network testing -p 127.0.0.1:8000:8000 --env-file dev/catalogue-service.env -e DB_HOST=db ghcr.io/naavre/naavre-catalogue-service:latest
+Create a bucket in a S3-compatible object storage. Generate an access- and secret key with the following policy (replace `"BUCKET_NAME"` with the actual value):
+
+```json
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Action": [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:DeleteObject",
+          "s3:ListBucket"
+        ],
+        "Effect": "Allow",
+        "Resource": [
+          "arn:aws:s3:::BUCKET_NAME",
+          "arn:aws:s3:::BUCKET_NAME/*"
+        ]
+      }
+    ]
+  }
 ```
 
-## Deploying with Helm
+### Deployment
 
 Create a custom `values.yaml` file (example: [helm/naavre-catalogue-service/values-example.yaml](./helm/naavre-catalogue-service/values-example.yaml); default values: [helm/naavre-catalogue-service/values.yaml](./helm/naavre-catalogue-service/values.yaml)).
 

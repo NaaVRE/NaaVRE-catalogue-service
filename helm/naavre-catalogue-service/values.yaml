@@ -134,6 +134,15 @@ conf:
     superuser_email: ""
     superuser_username: ""
     superuser_password: ""
+  s3:
+    # S3-compatible object storage configuration.
+    # The key should grant permission for:
+    # s3:GetObject, s3:PutObject, s3:DeleteObject, and s3:ListBucket on
+    # `arn:aws:s3:::example-bucket-name/*` and `arn:aws:s3:::example-bucket-name`
+    endpoint_url: ""
+    bucket_name: ""
+    access_key: ""
+    secret_key: ""
 
 global:
   postgresqlEnabled: true
