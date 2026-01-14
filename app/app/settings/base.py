@@ -101,6 +101,7 @@ STORAGES = {
             "bucket_name": os.environ['S3_BUCKET_NAME'],
             "access_key": os.environ['S3_ACCESS_KEY'],
             "secret_key": os.environ['S3_SECRET_KEY'],
+            "verify": os.getenv('VERIFY_SSL', 'true').lower() != 'false',
             "querystring_expire": 600,
             "file_overwrite": False,
             },
