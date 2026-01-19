@@ -1,7 +1,7 @@
 meta {
   name: List
   type: http
-  seq: 6
+  seq: 7
 }
 
 get {
@@ -21,6 +21,6 @@ tests {
   test("JSON response is valid", function () {
       var jsonData = res.getBody();
       // We expect the element created at "Create new"
-      expect(jsonData.count).to.eq(3);
+      expect(jsonData.count).to.eq(4);
   });
 }

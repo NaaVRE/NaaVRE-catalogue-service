@@ -1,7 +1,7 @@
 meta {
   name: Retrieve
   type: http
-  seq: 13
+  seq: 14
 }
 
 get {
@@ -69,7 +69,8 @@ tests {
       "description": "",
       "container_image": "test-image-2",
       "kernel": "",
-      "source_url": ""
+      "source_url": "",
+      "is_draft": false
     });
     expect(jsonData.url).is.not.null;
     expect(jsonData.created).is.not.null;

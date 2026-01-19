@@ -1,11 +1,11 @@
 meta {
-  name: Delete
+  name: Delete draft
   type: http
-  seq: 27
+  seq: 26
 }
 
 delete {
-  url: {{baseUrl}}/workflow-cells/{{validCellUUID}}/
+  url: {{baseUrl}}/workflow-cells/{{draftCellUUID}}/
   body: none
   auth: bearer
 }
