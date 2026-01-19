@@ -1,7 +1,7 @@
 meta {
-  name: Create new partial other VL
+  name: Create new draft
   type: http
-  seq: 4
+  seq: 2
 }
 
 post {
@@ -16,16 +16,16 @@ auth:bearer {
 
 body:json {
   {
-    "virtual_lab": "test-virtual-lab-2",
-    "title": "test-cell-other-lab-4",
-    "container_image": "test-image-4"
+    "virtual_lab": "test-virtual-lab-1",
+    "title": "test-cell-3-draft",
+    "is_draft": true
   }
 }
 
 script:post-response {
   try {
     const uuid = res.getBody().url.replace(/.*\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/$/, "$1")
-    bru.setVar('otherVLValidCellUUID', uuid)
+    bru.setVar('draftCellUUID', uuid)
   }
   catch (e) {
     console.log(e)
@@ -40,7 +40,7 @@ tests {
     var jsonData = res.getBody();
     expect(jsonData).to.deep.include({
       "owner": "test-user-2",
-      "virtual_lab": "test-virtual-lab-2",
+      "virtual_lab": "test-virtual-lab-1",
       "base_container_image": null,
       "dependencies": [],
       "inputs": [],
@@ -48,11 +48,12 @@ tests {
       "confs": [],
       "params": [],
       "secrets": [],
-      "title": "test-cell-other-lab-4",
+      "title": "test-cell-3-draft",
       "description": "",
-      "container_image": "test-image-4",
+      "container_image": null,
       "kernel": "",
-      "source_url": ""
+      "source_url": "",
+      "is_draft": true
     });
     expect(jsonData.url).is.not.null;
     expect(jsonData.created).is.not.null;

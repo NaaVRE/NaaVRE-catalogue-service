@@ -79,6 +79,7 @@ class Secret(BaseVariable):
 
 class Cell(BaseAsset, VersioningMixin):
     container_image = models.CharField(
+        blank=True, null=True,
         max_length=384,
         help_text=('Containerized cell image (example: '
                    'ghcr.io/me/my-naavre-cells/my-cell-1:49c621b)'),
@@ -104,6 +105,7 @@ class Cell(BaseAsset, VersioningMixin):
                    'https://github.com/me/my-NaaVRE-cells/tree'
                    '/2934de123c74316dc45fe84d340a7ca6914b8bc1/my-cell-1)'),
         )
+    is_draft = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{super().__str__()} (v{self.version})'
