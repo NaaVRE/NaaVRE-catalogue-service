@@ -1,0 +1,27 @@
+meta {
+  name: test-user-2 link cell v2 to v3
+  type: http
+  seq: 10
+}
+
+patch {
+  url: {{baseUrl}}/workflow-cells/{{shared-cell-test-user-2-v2-uuid}}/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+body:json {
+  {
+    "next_version": "{{baseUrl}}/workflow-cells/{{shared-cell-test-user-2-v3-uuid}}/"
+  }
+}
+
+tests {
+  test("Status code is 201", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+}
