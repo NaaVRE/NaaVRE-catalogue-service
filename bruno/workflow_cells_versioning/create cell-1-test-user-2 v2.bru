@@ -1,7 +1,7 @@
 meta {
   name: create cell-1-test-user-2 v2
   type: http
-  seq: 3
+  seq: 2
 }
 
 post {
@@ -19,7 +19,7 @@ body:json {
     "virtual_lab": "test-virtual-lab-1",
     "title": "cell-1-test-user-2",
     "container_image": "image",
-    "version": 2
+    "previous_version": "{{baseUrl}}/workflow-cells/{{cell-1-test-user-2-v1-uuid}}/"
   }
 }
 
