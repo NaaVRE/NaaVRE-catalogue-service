@@ -56,7 +56,7 @@ jobs:
 
       - name: start minikube
         id: minikube
-        uses: medyagh/setup-minikube@v0.0.19
+        uses: medyagh/setup-minikube@v0.0.21
         with:
           addons: ingress,ingress-dns
 
