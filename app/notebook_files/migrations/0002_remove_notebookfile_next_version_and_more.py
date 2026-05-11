@@ -7,14 +7,12 @@ def create_versions_collections(apps, schema_editor):
     Asset = apps.get_model("notebook_files", "NotebookFile")
     VersionsCollection = apps.get_model("notebook_files", "NotebookFileVersionsCollection")
     for asset in Asset.objects.all():
-        if asset.version == 1:
+        has_previous_version = asset.notebookfile_set.exists()
+        if not has_previous_version:
             collection = VersionsCollection.objects.create()
             while asset is not None:
                 collection.versions.add(asset)
                 asset = asset.next_version
-    for asset in Asset.objects.filter(notebookfileversionscollection__isnull=True):
-        collection = VersionsCollection.objects.create()
-        collection.versions.add(asset)
 
 
 class Migration(migrations.Migration):
