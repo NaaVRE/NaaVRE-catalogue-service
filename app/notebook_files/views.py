@@ -7,3 +7,4 @@ from . import serializers
 class NotebookFileViewSet(FileAssetViewSet):
     serializer_class = serializers.NotebookFileSerializer
     model_class = models.NotebookFile
+    versions_collection_model_class = models.NotebookFileVersionsCollection

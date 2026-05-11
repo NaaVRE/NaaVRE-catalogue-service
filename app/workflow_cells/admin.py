@@ -66,13 +66,11 @@ class CellAdmin(admin.ModelAdmin):
         "owner",
         "virtual_lab",
         "version",
-        "next_version",
         "created",
         "modified",
         ]
     list_filter = [
         "owner",
         "virtual_lab",
-        "next_version",
         "shared_with_scopes",
         ]

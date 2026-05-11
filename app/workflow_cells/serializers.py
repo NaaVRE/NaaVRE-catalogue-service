@@ -3,7 +3,10 @@ import hashlib
 from rest_framework import serializers
 from rest_framework.renderers import JSONRenderer
 
-from base_assets.serializers import BaseAssetSerializer
+from base_assets.serializers import (
+    BaseAssetSerializer,
+    VersioningSerializerMixin,
+    )
 from . import models
 
 
@@ -86,7 +89,7 @@ class SecretSerializer(BaseVariableSerializer):
         model = models.Secret
 
 
-class CellSerializer(BaseAssetSerializer):
+class CellSerializer(BaseAssetSerializer, VersioningSerializerMixin):
     base_container_image = BaseImageSerializer(required=False)
     dependencies = DependencySerializer(many=True, required=False)
     inputs = InputSerializer(many=True, required=False)
@@ -109,6 +112,7 @@ class CellSerializer(BaseAssetSerializer):
 
     class Meta(BaseAssetSerializer.Meta):
         model = models.Cell
+        versions_collection_model = models.CellVersionsCollection
         fields = '__all__'
 
     @staticmethod

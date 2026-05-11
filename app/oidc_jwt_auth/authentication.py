@@ -118,7 +118,6 @@ class OIDCAccessTokenBearerAuthentication(BaseAuthentication):
 
     @staticmethod
     def get_token_user(token_data):
-        print(token_data)
         import sys
         sys.stdout.flush()
         return User(

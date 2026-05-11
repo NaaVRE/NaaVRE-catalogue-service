@@ -27,13 +27,31 @@ class SharingScope(models.Model):
 
 class VersioningMixin(models.Model):
     version = models.IntegerField(default=1)
-    next_version = models.ForeignKey(
-        "self", on_delete=models.SET_NULL,
-        null=True, blank=True,
-        )
 
     class Meta:
         abstract = True
+
+
+class BaseAssetVersionsCollection(models.Model):
+    """
+    Subclasses FooVersionsCollection must define:
+        versions = models.ManyToManyField(Foo)
+    """
+    class Meta:
+        abstract = True
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        if cls._meta.abstract:
+            return
+        has_versions = any(
+            f.name == 'versions' and isinstance(f, models.ManyToManyField)
+            for f in cls._meta.local_many_to_many
+            )
+        if not has_versions:
+            raise TypeError(
+                f"{cls.__name__} must define a ManyToManyField named 'versions'"
+                )
 
 
 class BaseAsset(models.Model):
