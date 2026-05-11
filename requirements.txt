@@ -1,6 +1,6 @@
 Django==6.0.5
 django-cors-headers==4.9.0
-djangorestframework==3.16.1
+djangorestframework==3.17.1
 PyJWT[crypto]==2.12.1
 requests==2.33.0
 whitenoise==6.12.0
