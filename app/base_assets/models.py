@@ -53,6 +53,10 @@ class BaseAssetVersionsCollection(models.Model):
                 f"{cls.__name__} must define a ManyToManyField named 'versions'"
                 )
 
+    def __str__(self):
+        title = self.versions.order_by('version').values_list('title', flat=True).first()
+        return f'{title} collection ({self.versions.count()} versions)'
+
 
 class BaseAsset(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -74,4 +78,4 @@ class BaseAsset(models.Model):
         ordering = ['created']
 
     def __str__(self):
-        return f'{self.title}-{self.owner.username}'
+        return f'{self.title}'
