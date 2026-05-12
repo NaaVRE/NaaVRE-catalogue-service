@@ -33,7 +33,7 @@ jobs:
 
       - name: Install test dependencies
         run: |
-          npm install
+          npm ci
 
       - name: Wait for app
         uses: raschmitt/wait-for-healthy-container/@v1
