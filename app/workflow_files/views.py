@@ -7,3 +7,4 @@ from . import serializers
 class WorkflowFileViewSet(FileAssetViewSet):
     serializer_class = serializers.WorkflowFileSerializer
     model_class = models.WorkflowFile
+    versions_collection_model_class = models.WorkflowFileVersionsCollection

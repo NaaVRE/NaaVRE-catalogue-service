@@ -1,6 +1,6 @@
 from django.db import models
 
-from base_assets.models import BaseAsset, VersioningMixin
+from base_assets.models import BaseAsset, BaseAssetVersionsCollection, VersioningMixin
 
 
 class BaseImage(models.Model):
@@ -109,3 +109,7 @@ class Cell(BaseAsset, VersioningMixin):
 
     def __str__(self):
         return f'{super().__str__()} (v{self.version})'
+
+
+class CellVersionsCollection(BaseAssetVersionsCollection):
+    versions = models.ManyToManyField(Cell)

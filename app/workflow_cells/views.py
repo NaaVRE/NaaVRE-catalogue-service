@@ -8,6 +8,7 @@ from . import serializers
 class CellViewSet(BaseAssetViewSet):
     serializer_class = serializers.CellSerializer
     model_class = models.Cell
+    versions_collection_model_class = models.CellVersionsCollection
 
     def destroy(self, request, *args, **kwargs):
         # List instances of nested fields

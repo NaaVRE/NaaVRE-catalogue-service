@@ -31,12 +31,7 @@ class FileAssetSerializer(BaseAssetSerializer):
 
     def create(self, validated_data):
         key = validated_data.pop('key')
-        model_class = self.Meta.model
-        if model_class is None:
-            raise RuntimeError(
-                "Meta.model must be set on FileAssetSerializer subclass"
-                )
-        file = model_class(**validated_data)
+        file = super().create(validated_data)
         file.file.name = key
         file.save()
         return file

@@ -1,5 +1,5 @@
 from django.db import models as django_models
-from django.db.models import Q
+from django.db.models import OuterRef, Q, Subquery
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework import permissions
@@ -44,46 +44,58 @@ class BaseAssetViewSet(viewsets.ModelViewSet):
     ordering_fields = ['title', 'created', 'modified']
 
     # this should be overridden by children ViewSets
-    model_class: django_models.Model | None = None
+    model_class: django_models.Model
+    versions_collection_model_class: django_models.Model | None = None
+
+    @property
+    def versions_collection_model_name(self) -> str:
+        if not self.versions_collection_model_class:
+            raise AttributeError(f'{self.__class__.__name__} has no versions_collection_model_class')
+        elif self.versions_collection_model_class._meta.model_name is None:
+            raise AttributeError(f'{self.versions_collection_model_class.__name__} has no name')
+        else:
+            return self.versions_collection_model_class._meta.model_name
 
     def get_queryset(self, *args, **kwargs):
-        # 1. Include filters
-        q_include = Q()
+        query_filters = Q()
 
         # owned by the user
-        q_include |= Q(owner=self.request.user)
+        query_filters |= Q(owner=self.request.user)
 
         # shared with the user
         if self.action == 'list':
             shared_with_me = self.request.query_params.get('shared_with_me')
             if shared_with_me and shared_with_me.lower() == 'true':
-                q_include |= Q(shared_with_users=self.request.user)
+                query_filters |= Q(shared_with_users=self.request.user)
         elif self.action == 'retrieve':
-            q_include |= Q(shared_with_users=self.request.user)
+            query_filters |= Q(shared_with_users=self.request.user)
 
         # shared within scopes
         if self.action == 'list':
             shared_with_scopes = self.request.query_params.get('shared_with_scopes')
             if shared_with_scopes:
                 for scope_slug in shared_with_scopes.split(','):
-                    q_include |= Q(shared_with_scopes__slug=scope_slug)
+                    query_filters |= Q(shared_with_scopes__slug=scope_slug)
         elif self.action == 'retrieve':
-            q_include |= Q(shared_with_scopes__isnull=False)
+            query_filters |= Q(shared_with_scopes__isnull=False)
 
-        # 2. Exclusion filters
-        q_exclude = Q()
-
-        # non-current versions
-        if hasattr(self.model_class, 'next_version'):
-            if self.action == 'list':
-                all_versions = self.request.query_params.get('all_versions')
-                if all_versions and all_versions.lower() == 'false':
-                    q_exclude |= Q(next_version__isnull=False)
+        # latest version (last because it depends on the filters above)
+        if self.action == 'list':
+            all_versions = self.request.query_params.get('all_versions', 'true')
+            if (self.versions_collection_model_class is not None) and (all_versions.lower() == 'false'):
+                versions_collection_outer_ref = Q(**{
+                    self.versions_collection_model_name: OuterRef(self.versions_collection_model_name),
+                    })
+                latest_in_collection = (
+                    self.model_class.objects.filter(query_filters & versions_collection_outer_ref)
+                    .order_by("-version")
+                    .values("version")[:1]
+                )
+                query_filters &= Q(version=Subquery(latest_in_collection))
 
         queryset = (
             self.model_class.objects
-                .filter(q_include)
-                .exclude(q_exclude)
+                .filter(query_filters)
                 .distinct()
             )
 

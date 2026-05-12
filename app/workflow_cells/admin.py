@@ -1,5 +1,9 @@
 from django.contrib import admin
 
+from base_assets.admin import (
+    BaseAssetAdmin, BaseAssetAdminVersionMixin,
+    BaseAssetVersionsCollectionAdmin,
+    )
 from . import models
 
 
@@ -60,19 +64,10 @@ class SecretAdmin(BaseVariableAdmin):
 
 
 @admin.register(models.Cell)
-class CellAdmin(admin.ModelAdmin):
-    list_display = [
-        "__str__",
-        "owner",
-        "virtual_lab",
-        "version",
-        "next_version",
-        "created",
-        "modified",
-        ]
-    list_filter = [
-        "owner",
-        "virtual_lab",
-        "next_version",
-        "shared_with_scopes",
-        ]
+class CellAdmin(BaseAssetAdmin, BaseAssetAdminVersionMixin):
+    versions_collection_model_class = models.CellVersionsCollection
+
+
+@admin.register(models.CellVersionsCollection)
+class CellVersionsCollectionAdmin(BaseAssetVersionsCollectionAdmin):
+    versions_collection_model_class = models.CellVersionsCollection

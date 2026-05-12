@@ -1,0 +1,40 @@
+meta {
+  name: test-user-2 create cell v3
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseUrl}}/workflow-cells/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+body:json {
+  {
+    "virtual_lab": "test-virtual-lab-1",
+    "title": "shared-cell-test-user-2",
+    "container_image": "image",
+    "previous_version": "{{baseUrl}}/workflow-cells/{{shared-cell-test-user-2-v2-uuid}}/"
+  }
+}
+
+script:post-response {
+  try {
+    const uuid = res.getBody().url.replace(/.*\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/$/, "$1")
+    bru.setVar('shared-cell-test-user-2-v3-uuid', uuid)
+  }
+  catch (e) {
+    console.log(e)
+  }
+}
+
+tests {
+  test("Status code is 201", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+}

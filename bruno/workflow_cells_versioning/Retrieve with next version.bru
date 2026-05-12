@@ -23,7 +23,8 @@ tests {
   
   test("JSON response is valid", function () {
     var jsonData = res.getBody();
-    const nextVersionUrl = `${bru.getEnvVar("baseUrl")}/workflow-cells/${bru.getVar("cell-1-test-user-2-v2-uuid")}/`;
+    const v1Url = `${bru.getEnvVar("baseUrl")}/workflow-cells/${bru.getVar("cell-1-test-user-2-v1-uuid")}/`;
+    const v2Url = `${bru.getEnvVar("baseUrl")}/workflow-cells/${bru.getVar("cell-1-test-user-2-v2-uuid")}/`;
     expect(jsonData).to.deep.include({
       "owner": "test-user-2",
       "virtual_lab": "test-virtual-lab-1",
@@ -40,7 +41,16 @@ tests {
       "container_image": "image",
       "kernel": "",
       "source_url": "",
-      "next_version": nextVersionUrl
+      "versions": [
+        {
+          "version": 1,
+          "url": v1Url
+        },
+        {
+          "version": 2,
+          "url": v2Url
+        }
+      ]
     });
     expect(jsonData.url).is.not.null;
     expect(jsonData.created).is.not.null;

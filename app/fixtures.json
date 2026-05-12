@@ -317,6 +317,15 @@
     }
   },
   {
+    "model": "workflow_cells.cellversionscollection",
+    "pk": 1,
+    "fields": {
+      "versions": [
+        "b2668e85-d813-40e7-b4a1-803764f7c653"
+      ]
+    }
+  },
+  {
     "model": "workflows.workflow",
     "pk": "293f1c6e-971b-44e2-adb3-c335ec2b17c1",
     "fields": {

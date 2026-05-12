@@ -16,7 +16,6 @@ class WorkflowAdmin(admin.ModelAdmin):
         "owner",
         "virtual_lab",
         # "version",
-        # "next_version",
         "created",
         "modified",
         "run_url",
@@ -26,7 +25,6 @@ class WorkflowAdmin(admin.ModelAdmin):
     list_filter = [
         "owner",
         "virtual_lab",
-        # "next_version",
         "shared_with_scopes",
         "status",
         ]
