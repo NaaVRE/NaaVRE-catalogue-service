@@ -31,7 +31,7 @@ class VirtualLab(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     deployment_url = models.URLField(
-        blank=True, verbose_name='URL',
+        max_length=1000, blank=True, verbose_name='URL',
         help_text='URL of the virtual lab deployment',
         )
     container_image = models.CharField(
