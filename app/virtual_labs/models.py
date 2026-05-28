@@ -38,6 +38,10 @@ class VirtualLab(models.Model):
         max_length=384, blank=True,
         help_text='Container image of the virtual lab',
         )
+    binder_ref = models.CharField(
+        max_length=500, blank=True,
+        help_text='Binder ref (e.g. gh/NaaVRE/vl-openlab/HEAD)',
+        )
     image = models.TextField(
         null=True,
         blank=True,
