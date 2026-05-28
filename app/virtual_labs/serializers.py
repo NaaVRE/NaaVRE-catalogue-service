@@ -24,5 +24,6 @@ class VirtualLabSerializer(serializers.HyperlinkedModelSerializer):
             'modified',
             'deployment_url',
             'container_image',
+            "binder_ref",
             'image',
             ]

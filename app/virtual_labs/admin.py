@@ -27,6 +27,7 @@ class VirtualLabAdmin(admin.ModelAdmin):
         "title",
         "deployment_url",
         "container_image",
+        "binder_ref",
         "created",
         "modified",
         ]
