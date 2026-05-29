@@ -85,6 +85,7 @@ class Cell(BaseAsset, VersioningMixin):
         blank=True, null=True,
         max_length=2,
         choices=TEMPLATE_FORMAT_CHOICES,
+        default=TEMPLATE_FORMATS[0],
         )
     container_image = models.CharField(
         blank=True, null=True,
