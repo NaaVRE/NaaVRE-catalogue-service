@@ -293,6 +293,7 @@
     "model": "workflow_cells.cell",
     "pk": "b2668e85-d813-40e7-b4a1-803764f7c653",
     "fields": {
+      "template_format": "v1",
       "container_image": "fixture-image-1",
       "base_container_image": null,
       "kernel": "",
