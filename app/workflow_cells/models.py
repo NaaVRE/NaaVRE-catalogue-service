@@ -78,6 +78,15 @@ class Secret(BaseVariable):
 
 
 class Cell(BaseAsset, VersioningMixin):
+    TEMPLATE_FORMATS = ['v1', 'v2']
+    TEMPLATE_FORMAT_CHOICES = {choice: choice for choice in TEMPLATE_FORMATS}
+
+    template_format = models.CharField(
+        blank=True, null=True,
+        max_length=2,
+        choices=TEMPLATE_FORMAT_CHOICES,
+        default=TEMPLATE_FORMATS[0],
+        )
     container_image = models.CharField(
         blank=True, null=True,
         max_length=384,
