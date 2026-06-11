@@ -184,6 +184,13 @@
       "created": "2024-10-16T13:05:39.474Z",
       "modified": "2024-10-16T13:05:39.474Z",
       "deployment_url": "",
+      "additional_actions": [
+        {
+          "label": "Example action",
+          "url": "https://naavre.net",
+          "color": "#3c8f49"
+        }
+      ],
       "container_image": "",
       "binder_ref": ""
     }
