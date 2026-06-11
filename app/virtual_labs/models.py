@@ -28,6 +28,8 @@ class VirtualLab(models.Model):
     title = models.CharField(max_length=255)
     labels = models.ManyToManyField("VirtualLabLabel", related_name="VirtualLabs", blank=True)
     description = models.TextField(blank=True)
+    is_pinned = models.BooleanField(default=False)
+    pinned_order = models.IntegerField(default=-1)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     deployment_url = models.URLField(
