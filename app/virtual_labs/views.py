@@ -41,3 +41,8 @@ class VirtualLabViewSet(viewsets.ReadOnlyModelViewSet):
     ordering_fields = ['slug', 'title', 'created', 'modified', 'pinned_order']
     ordering = ['title']
     pagination_class = VirtualLabPagination
+
+
+class VirtualLabLabelViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = models.VirtualLabLabel.objects.all()
+    serializer_class = serializers.VirtualLabLabelSerializer
