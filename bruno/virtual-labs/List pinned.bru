@@ -1,0 +1,34 @@
+meta {
+  name: List pinned
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/virtual-labs/?is_pinned=true&ordering=pinned_order
+  body: none
+  auth: bearer
+}
+
+params:query {
+  is_pinned: true
+  ordering: pinned_order
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  test("JSON response is valid", function () {
+      var jsonData = res.getBody();
+      // the fixture only contain two pinned virtual labs
+      expect(jsonData.count).to.eq(2);
+      // they are ordered so that test-virtual-lab-2 is first
+      expect(jsonData.results[0].slug).to.eq("test-virtual-lab-2")
+      expect(jsonData.results[1].slug).to.eq("test-virtual-lab-1")
+  });
+}
