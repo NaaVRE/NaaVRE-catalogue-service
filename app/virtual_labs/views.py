@@ -1,10 +1,26 @@
 from django_filters.rest_framework import DjangoFilterBackend
+from django_filters import FilterSet, BaseInFilter
 from rest_framework import filters
 from rest_framework import viewsets
 from rest_framework import pagination
 
 from . import models
 from . import serializers
+
+
+class VirtualLabFilter(FilterSet):
+    labels = BaseInFilter(
+        field_name="labels__title",
+        lookup_expr="in",
+    )
+
+    class Meta:
+        model = models.VirtualLab
+        fields = {
+            'slug': ['exact'],
+            'title': ['exact'],
+            'is_pinned': ['exact'],
+        }
 
 
 class VirtualLabPagination(pagination.PageNumberPagination):
@@ -20,7 +36,7 @@ class VirtualLabViewSet(viewsets.ReadOnlyModelViewSet):
         filters.SearchFilter,
         filters.OrderingFilter,
         ]
-    filterset_fields = ['slug', 'title', 'is_pinned']
+    filterset_class = VirtualLabFilter
     search_fields = ['title', 'description']
     ordering_fields = ['slug', 'title', 'created', 'modified', 'pinned_order']
     ordering = ['title']
