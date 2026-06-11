@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
+from django_jsonform.widgets import JSONFormWidget
+from django_pydantic_field.fields import PydanticSchemaField
 
 from . import models
 
@@ -31,3 +33,6 @@ class VirtualLabAdmin(admin.ModelAdmin):
         "created",
         "modified",
         ]
+    formfield_overrides = {
+        PydanticSchemaField: {"widget": JSONFormWidget},
+    }

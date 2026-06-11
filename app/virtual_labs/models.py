@@ -1,6 +1,32 @@
 from django.db import models
 from django.core.validators import RegexValidator
 
+from django_pydantic_field import SchemaField
+from pydantic import BaseModel, Field
+
+
+color_regex = r'^#(?:[0-9a-fA-F]{3}){1,2}$'
+
+
+# We represent AdditionalActions as a pydantic model that gets serialized in a
+# JSONField at VirtualLab.additional_actions.
+# This allows for two things:
+# - avoiding a separate table for this data that is strictly subordinate of a
+#   given VirtualLab
+# - having an ordered list without extra steps (getting this with a m2m field
+#   requires extra code)
+# The tradeoff is that no automatic database migrations are created if the
+# pydantic schema is updated, because it is not managed by Django.
+# If the schema is updated, existing values of VirtualLab.additional_action
+# will stay on the old schema, unless a manual migration is created.
+# Hence, the following WARNING:
+# WARNING: DO NOT MODIFY THIS MODEL'S SCHEMA UNLESS YOU ALSO ADD A MANUAL
+# MIGRATION FOR EXISTING VirtualLab.additional_action FIELDS IN THE DB.
+class AdditionalAction(BaseModel):
+    label: str = Field(max_length=255)
+    url: str = Field(max_length=1000)
+    color: str = Field(default=None, pattern=color_regex)
+
 
 class VirtualLabLabel(models.Model):
     title = models.CharField(
@@ -12,7 +38,7 @@ class VirtualLabLabel(models.Model):
         max_length=7,
         validators=[
             RegexValidator(
-                regex=r'^#(?:[0-9a-fA-F]{3}){1,2}$',
+                regex=color_regex,
                 message="Color must be a valid hex code, e.g., #FFF or #FFFFFF.",
                 )
             ],
@@ -36,6 +62,7 @@ class VirtualLab(models.Model):
         max_length=1000, blank=True, verbose_name='URL',
         help_text='URL of the virtual lab deployment',
         )
+    additional_actions: list[AdditionalAction] = SchemaField(default=list, blank=True)
     container_image = models.CharField(
         max_length=384, blank=True,
         help_text='Container image of the virtual lab',
