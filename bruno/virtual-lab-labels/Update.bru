@@ -5,7 +5,7 @@ meta {
 }
 
 put {
-  url: {{baseUrl}}/virtual-labs/test-virtual-lab-1/
+  url: {{baseUrl}}/virtual-lab-labels/1/
   body: json
   auth: bearer
 }
@@ -15,14 +15,7 @@ auth:bearer {
 }
 
 body:json {
-  {
-              "slug": "test-virtual-lab-1",
-              "title": "test-virtual-lab-1",
-              "description": "my-other-description",
-              "deployment_url": "",
-              "container_image": "",
-              "binder_ref": ""
-  }
+  {}
 }
 
 tests {

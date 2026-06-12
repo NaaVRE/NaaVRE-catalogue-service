@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/virtual-labs/
+  url: {{baseUrl}}/virtual-lab-labels/
   body: none
   auth: bearer
 }
@@ -21,12 +21,5 @@ tests {
   test("JSON response is valid", function () {
       var jsonData = res.getBody();
       expect(jsonData.count).to.eq(3);
-      expect(jsonData.results[2].additional_actions).to.deep.equal([
-        {
-          "label": "Example action",
-          "url": "https://naavre.net",
-          "color": "#3c8f49"
-        }
-      ]);
   });
 }

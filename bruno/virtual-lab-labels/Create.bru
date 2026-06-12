@@ -1,11 +1,11 @@
 meta {
-  name: Create new
+  name: Create
   type: http
   seq: 6
 }
 
 post {
-  url: {{baseUrl}}/virtual-labs/
+  url: {{baseUrl}}/virtual-lab-labels/
   body: json
   auth: bearer
 }
@@ -15,19 +15,7 @@ auth:bearer {
 }
 
 body:json {
-  {
-              "slug": "{{slug}}",
-              "title": "{{title}}",
-              "description": "",
-              "deployment_url": "",
-              "container_image": "",
-              "binder_ref": ""
-  }
-}
-
-script:pre-request {
-  bru.setVar('slug', 'test-virtual-lab-1')
-  bru.setVar('title', 'Test Virtual Lab 1')
+  {}
 }
 
 tests {

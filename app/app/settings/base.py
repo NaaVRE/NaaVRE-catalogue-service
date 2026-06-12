@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_probes',
     'django_filters',
+    'django_jsonform',
     'file_assets',
     'base_assets',
     'notebook_files',
