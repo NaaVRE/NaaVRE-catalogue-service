@@ -12,6 +12,7 @@ class VirtualLabFilter(FilterSet):
     labels = BaseInFilter(
         field_name="labels__title",
         lookup_expr="in",
+        distinct=True,
     )
 
     class Meta:
