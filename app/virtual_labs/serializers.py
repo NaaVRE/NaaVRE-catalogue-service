@@ -22,6 +22,7 @@ class VirtualLabSerializer(serializers.HyperlinkedModelSerializer):
             'title',
             'labels',
             'description',
+            'long_description',
             'created',
             'modified',
             'deployment_url',

@@ -53,7 +53,14 @@ class VirtualLab(models.Model):
     slug = models.SlugField(primary_key=True, unique=True)
     title = models.CharField(max_length=255)
     labels = models.ManyToManyField("VirtualLabLabel", related_name="VirtualLabs", blank=True)
-    description = models.TextField(blank=True)
+    description = models.TextField(
+        blank=True,
+        help_text="Short description of the virtual lab",
+        )
+    long_description = models.TextField(
+        blank=True,
+        help_text="Markdown-formatted description of the virtual lab",
+        )
     is_pinned = models.BooleanField(default=False)
     pinned_order = models.IntegerField(default=-1)
     created = models.DateTimeField(auto_now_add=True)
