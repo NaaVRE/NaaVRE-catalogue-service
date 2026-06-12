@@ -142,6 +142,7 @@
       "title": "fixture-virtual-lab-1",
       "labels": [],
       "description": "",
+      "long_description": "",
       "is_pinned": false,
       "created": "2024-10-16T13:05:39.474Z",
       "modified": "2024-10-16T13:05:39.474Z",
@@ -160,6 +161,7 @@
         2
       ],
       "description": "",
+      "long_description": "",
       "is_pinned": true,
       "pinned_order": 2,
       "created": "2024-10-16T13:05:39.474Z",
@@ -179,6 +181,7 @@
         3
       ],
       "description": "",
+      "long_description": "",
       "is_pinned": true,
       "pinned_order": 1,
       "created": "2024-10-16T13:05:39.474Z",
