@@ -4,6 +4,37 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
+def migrate_binder_ref_to_binder_environment(apps, schema_editor):
+    VirtualLab = apps.get_model('virtual_labs', 'VirtualLab')
+    BinderEnvironment = apps.get_model(
+        'binder_environments', 'BinderEnvironment'
+        )
+
+    for vl in VirtualLab.objects.all():
+        # binder_ref is still a CharField at this point (pre-AlterField)
+        binder_ref_value = vl.binder_ref
+        if not binder_ref_value:
+            vl.binder_environment_id = None
+        else:
+            env, _ = BinderEnvironment.objects.get_or_create(
+                binder_ref=binder_ref_value,
+                defaults={'container_image': '', 'pre_pull': False},
+                )
+            vl.binder_environment_id = env.pk
+        vl.save()
+
+
+def migrate_binder_environment_to_binder_ref(apps, schema_editor):
+    VirtualLab = apps.get_model('virtual_labs', 'VirtualLab')
+
+    for vl in VirtualLab.objects.select_related('binder_ref_fk').all():
+        if vl.binder_environment_id is not None:
+            vl.binder_ref = vl.binder_environment.binder_ref
+        else:
+            vl.binder_ref = ''
+        vl.save()
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -12,7 +43,8 @@ class Migration(migrations.Migration):
         ]
 
     operations = [
-        migrations.AlterField(
+        # add the ForeignKey column alongside the existing CharField
+        migrations.AddField(
             model_name='virtuallab',
             name='binder_environment',
             field=models.ForeignKey(
@@ -20,5 +52,15 @@ class Migration(migrations.Migration):
                 on_delete=django.db.models.deletion.PROTECT,
                 to='binder_environments.binderenvironment'
                 ),
+            ),
+        # populate the new ForeignKey from the old CharField
+        migrations.RunPython(
+            migrate_binder_ref_to_binder_environment,
+            reverse_code=migrate_binder_environment_to_binder_ref,
+            ),
+        # drop the old CharField
+        migrations.RemoveField(
+            model_name='virtuallab',
+            name='binder_ref',
             ),
         ]
