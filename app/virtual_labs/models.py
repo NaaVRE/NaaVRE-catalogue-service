@@ -4,6 +4,7 @@ from django.core.validators import RegexValidator
 from django_pydantic_field import SchemaField
 from pydantic import BaseModel, Field
 
+from binder_environments.models import BinderEnvironment
 
 color_regex = r'^#(?:[0-9a-fA-F]{3}){1,2}$'
 
@@ -74,9 +75,11 @@ class VirtualLab(models.Model):
         max_length=384, blank=True,
         help_text='Container image of the virtual lab',
         )
-    binder_ref = models.CharField(
-        max_length=500, blank=True,
-        help_text='Binder ref (e.g. gh/NaaVRE/vl-openlab/HEAD)',
+    binder_environment = models.ForeignKey(
+        BinderEnvironment,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
         )
     image = models.TextField(
         null=True,

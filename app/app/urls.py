@@ -5,6 +5,7 @@ from rest_framework.routers import DefaultRouter
 from django.conf import settings
 
 from base_assets.urls import router as base_assets_router
+from binder_environments.urls import router as binder_environments_router
 from notebook_files.urls import router as notebook_files_router
 from paas_configuration.urls import router as paas_configuration_router
 from users.urls import router as users_router
@@ -16,6 +17,7 @@ from workflows.urls import router as workflows_router
 
 router = DefaultRouter()
 router.registry.extend(base_assets_router.registry)
+router.registry.extend(binder_environments_router.registry)
 router.registry.extend(notebook_files_router.registry)
 router.registry.extend(paas_configuration_router.registry)
 router.registry.extend(users_router.registry)
