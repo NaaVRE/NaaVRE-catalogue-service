@@ -1,3 +1,5 @@
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 from rest_framework import permissions
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
@@ -14,6 +16,11 @@ class BinderEnvironmentViewSet(viewsets.ModelViewSet):
 
     model = models.BinderEnvironment
 
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+        ]
     filterset_fields = ['binder_ref', 'pre_pull']
     search_fields = ['binder_ref']
     ordering = ['binder_ref']
