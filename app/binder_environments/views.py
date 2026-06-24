@@ -12,7 +12,7 @@ class BinderEnvironmentViewSet(viewsets.ModelViewSet):
     queryset = models.BinderEnvironment.objects.all()
     serializer_class = serializers.BinderEnvironmentSerializer
     authentication_classes = [TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
 
     model = models.BinderEnvironment
 
