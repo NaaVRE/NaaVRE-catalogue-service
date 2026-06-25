@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'file_assets',
     'base_assets',
     'binder_environments',
+    'core',
     'notebook_files',
     'oidc_jwt_auth',
     'paas_configuration',
