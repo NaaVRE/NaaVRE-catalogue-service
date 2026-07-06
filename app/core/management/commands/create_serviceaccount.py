@@ -80,6 +80,6 @@ class Command(BaseCommand):
                 Token.objects.create(user=user, key=token_key)
                 self.stdout.write(
                     self.style.SUCCESS(
-                        f"Created token: (using the provided value)"
+                        "Created token: (using the provided value)"
                         )
                     )
