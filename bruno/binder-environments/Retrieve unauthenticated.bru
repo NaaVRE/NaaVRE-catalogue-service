@@ -1,0 +1,27 @@
+meta {
+  name: Retrieve unauthenticated
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/binder-environments/{{env-1-uuid}}/
+  body: none
+  auth: none
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  test("JSON response is valid", function () {
+      var jsonData = res.getBody();
+      expect(jsonData).to.deep.include({
+        "url": `${bru.getEnvVar("baseUrl")}/binder-environments/${bru.getVar("env-1-uuid")}/`,
+        "binder_ref": bru.getFolderVar("binder_ref"),
+        "container_image": "",
+        "pre_pull": false
+      });
+  });
+  
+}

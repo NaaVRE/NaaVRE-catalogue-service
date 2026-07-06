@@ -1,0 +1,22 @@
+meta {
+  name: Retrieve user jwt
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{baseUrl}}/binder-environments/{{env-1-uuid}}/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  
+}

@@ -1,0 +1,31 @@
+meta {
+  name: Update
+  type: http
+  seq: 12
+}
+
+put {
+  url: {{baseUrl}}/binder-environments/{{env-1-uuid}}/
+  body: json
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: Token {{saToken}}
+  placement: header
+}
+
+body:json {
+  {
+    "binder_ref": "{{binder_ref}}",
+    "pre_pull": false
+  }
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  
+}

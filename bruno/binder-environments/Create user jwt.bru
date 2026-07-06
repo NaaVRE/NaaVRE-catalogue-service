@@ -1,0 +1,27 @@
+meta {
+  name: Create user jwt
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/binder-environments/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+body:json {
+  {
+    "binder_ref": "{{binder_ref}}"
+  }
+}
+
+tests {
+  test("Status code is 401", function () {
+      expect(res.getStatus()).to.equal(401);
+  });
+}

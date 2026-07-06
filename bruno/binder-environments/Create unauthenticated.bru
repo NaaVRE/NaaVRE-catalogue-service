@@ -1,0 +1,23 @@
+meta {
+  name: Create unauthenticated
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/binder-environments/
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "binder_ref": "{{binder_ref}}"
+  }
+}
+
+tests {
+  test("Status code is 401", function () {
+      expect(res.getStatus()).to.equal(401);
+  });
+}
