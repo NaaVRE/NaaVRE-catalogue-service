@@ -18,21 +18,11 @@ Start the dev database and object store:
 docker compose -f dev/docker-compose.yaml up
 ```
 
-Populate the dev database
+Run the dev server (this also populates the dev database and loads fixtures):
 
 ```shell
 while read env; do export $env; done < dev/catalogue-service.env
-python app/manage.py makemigrations
-python app/manage.py migrate
-python app/manage.py loaddata app/fixtures.json
-python app/manage.py createsuperuser --no-input
-```
-
-Run the dev server
-
-```shell
-while read env; do export $env; done < dev/catalogue-service.env
-python app/manage.py runserver
+bash app/entrypoint.sh
 ```
 
 API testing is done with [bruno](https://github.com/usebruno/bruno), and the collection in the [./bruno](./bruno) folder.

@@ -165,3 +165,5 @@ node_modules/
 
 helm/naavre-catalogue-service/charts
 helm/naavre-catalogue-service/tmpcharts
+
+app/staticfiles
