@@ -1,0 +1,23 @@
+meta {
+  name: List sa token
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/binder-environments/
+  body: none
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: Token {{saToken}}
+  placement: header
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+}

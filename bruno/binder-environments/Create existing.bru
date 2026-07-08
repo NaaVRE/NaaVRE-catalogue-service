@@ -1,0 +1,29 @@
+meta {
+  name: Create existing
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/binder-environments/
+  body: json
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: Token {{saToken}}
+  placement: header
+}
+
+body:json {
+  {
+    "binder_ref": "{{binder_ref}}"
+  }
+}
+
+tests {
+  test("Status code is 400", function () {
+      expect(res.getStatus()).to.equal(400);
+  });
+}

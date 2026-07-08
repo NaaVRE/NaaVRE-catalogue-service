@@ -1,0 +1,30 @@
+meta {
+  name: Partial update
+  type: http
+  seq: 11
+}
+
+patch {
+  url: {{baseUrl}}/binder-environments/{{env-1-uuid}}/
+  body: json
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: Token {{saToken}}
+  placement: header
+}
+
+body:json {
+  {
+    "pre_pull": true
+  }
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  
+}

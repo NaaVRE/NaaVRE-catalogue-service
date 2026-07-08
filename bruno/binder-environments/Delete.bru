@@ -1,0 +1,23 @@
+meta {
+  name: Delete
+  type: http
+  seq: 13
+}
+
+delete {
+  url: {{baseUrl}}/binder-environments/{{env-1-uuid}}/
+  body: none
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: Token {{saToken}}
+  placement: header
+}
+
+tests {
+  test("Status code is 204", function () {
+      expect(res.getStatus()).to.equal(204);
+  });
+}
