@@ -16,6 +16,12 @@ class BaseImageSerializer(serializers.ModelSerializer):
         fields = ['build', 'runtime']
 
 
+class CellContainerizationJobSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CellContainerizationJob
+        fields = ["html_url", "status", "conclusion"]
+
+
 class CellNestedFieldSerializer(serializers.ListSerializer):
     def _data_hash(self, data):
         json = JSONRenderer().render(data)
@@ -91,6 +97,7 @@ class SecretSerializer(BaseVariableSerializer):
 
 class CellSerializer(BaseAssetSerializer, VersioningSerializerMixin):
     base_container_image = BaseImageSerializer(required=False)
+    containerization_job = CellContainerizationJobSerializer(required=False)
     dependencies = DependencySerializer(many=True, required=False)
     inputs = InputSerializer(many=True, required=False)
     outputs = OutputSerializer(many=True, required=False)
@@ -100,6 +107,7 @@ class CellSerializer(BaseAssetSerializer, VersioningSerializerMixin):
 
     nested_serializer_classes = {
         'base_container_image': BaseImageSerializer,
+        'containerization_job': CellContainerizationJobSerializer,
         }
     nested_serializer_classes_many = {
         'dependencies': DependencySerializer,

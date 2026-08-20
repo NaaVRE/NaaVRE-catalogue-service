@@ -1,0 +1,41 @@
+meta {
+  name: Create cell-1 (no status)
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/workflow-cells/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "virtual_lab": "test-virtual-lab-1",
+    "title": "cell-1",
+    "container_image": "image"
+  }
+}
+
+script:post-response {
+  try {
+    const uuid = res.getBody().url.replace(/.*\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/$/, "$1")
+    bru.setVar('cell-1-uuid', uuid)
+  }
+  catch (e) {
+    console.log(e)
+  }
+}
+
+tests {
+  test("Status code is 201", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+  test("JSON response is valid", function () {
+    var jsonData = res.getBody();
+    expect(jsonData).to.deep.include({
+        "containerization_job": null
+    });
+  });
+}

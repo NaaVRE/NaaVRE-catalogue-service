@@ -19,6 +19,37 @@ class BaseImage(models.Model):
         return f'{self.build}, {self.runtime}'
 
 
+class CellContainerizationJob(models.Model):
+    class Status(models.TextChoices):
+        QUEUED = 'queued', 'Queued'
+        IN_PROGRESS = 'in_progress', 'In progress'
+        COMPLETED = 'completed', 'Completed'
+        WAITING = 'waiting', 'Waiting'
+        REQUESTED = 'requested', 'Requested'
+        PENDING = 'pending', 'Pending'
+
+    class Conclusion(models.TextChoices):
+        SUCCESS = 'success', 'Success'
+        FAILURE = 'failure', 'Failure'
+        NEUTRAL = 'neutral', 'Neutral'
+        CANCELLED = 'cancelled', 'Cancelled'
+        SKIPPED = 'skipped', 'Skipped'
+        TIMED_OUT = 'timed_out', 'Timed out'
+        ACTION_REQUIRED = 'action_required', 'Action required'
+
+    html_url = models.URLField(blank=True, null=True)
+    status = models.CharField(max_length=11, choices=Status)
+    conclusion = models.CharField(max_length=15, choices=Conclusion, blank=True, null=True)
+
+    def __str__(self):
+        return (
+            f'CellContainerizationJob('
+            f'status="{self.status}", '
+            f'conclusion="{self.conclusion}", '
+            f'html_url="{self.html_url}")'
+        )
+
+
 class Dependency(models.Model):
     name = models.CharField(max_length=255)
     module = models.CharField(blank=True, null=True, max_length=255)
@@ -95,6 +126,10 @@ class Cell(BaseAsset, VersioningMixin):
         )
     base_container_image = models.ForeignKey(
         BaseImage, blank=True, null=True,
+        on_delete=models.PROTECT,
+        )
+    containerization_job = models.ForeignKey(
+        CellContainerizationJob, blank=True, null=True,
         on_delete=models.PROTECT,
         )
     dependencies = models.ManyToManyField(Dependency, blank=True)

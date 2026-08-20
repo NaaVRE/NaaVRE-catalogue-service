@@ -15,6 +15,19 @@ class BaseImageAdmin(admin.ModelAdmin):
         ]
 
 
+@admin.register(models.CellContainerizationJob)
+class CellContainerizationJobAdmin(admin.ModelAdmin):
+    list_display = [
+        "html_url",
+        "status",
+        "conclusion",
+        ]
+    list_filter = [
+        "status",
+        "conclusion",
+        ]
+
+
 @admin.register(models.Dependency)
 class DependencyAdmin(admin.ModelAdmin):
     list_display = [
@@ -66,6 +79,10 @@ class SecretAdmin(BaseVariableAdmin):
 @admin.register(models.Cell)
 class CellAdmin(BaseAssetAdmin, BaseAssetAdminVersionMixin):
     versions_collection_model_class = models.CellVersionsCollection
+    list_filter = [
+        "containerization_job__status",
+        "containerization_job__conclusion",
+        ]
 
 
 @admin.register(models.CellVersionsCollection)
