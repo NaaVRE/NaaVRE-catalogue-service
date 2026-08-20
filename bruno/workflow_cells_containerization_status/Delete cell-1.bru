@@ -1,0 +1,17 @@
+meta {
+  name: Delete cell-1
+  type: http
+  seq: 10
+}
+
+delete {
+  url: {{baseUrl}}/workflow-cells/{{cell-1-uuid}}/
+  body: none
+  auth: inherit
+}
+
+tests {
+  test("Status code is 204", function () {
+      expect(res.getStatus()).to.equal(204);
+  });
+}

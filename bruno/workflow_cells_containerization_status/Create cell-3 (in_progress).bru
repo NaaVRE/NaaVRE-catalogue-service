@@ -1,0 +1,50 @@
+meta {
+  name: Create cell-3 (in_progress)
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/workflow-cells/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "virtual_lab": "test-virtual-lab-1",
+    "title": "cell-3",
+    "container_image": "image",
+    "containerization_job": {
+      "html_url": "https://example.com/",
+      "status": "in_progress",
+      "conclusion": null
+    }
+  }
+}
+
+script:post-response {
+  try {
+    const uuid = res.getBody().url.replace(/.*\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/$/, "$1")
+    bru.setVar('cell-3-uuid', uuid)
+  }
+  catch (e) {
+    console.log(e)
+  }
+}
+
+tests {
+  test("Status code is 201", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+  test("JSON response is valid", function () {
+    var jsonData = res.getBody();
+    expect(jsonData).to.deep.include({
+      "containerization_job": {
+        "html_url": "https://example.com/",
+        "status": "in_progress",
+        "conclusion": null
+      },
+    });
+  });
+}

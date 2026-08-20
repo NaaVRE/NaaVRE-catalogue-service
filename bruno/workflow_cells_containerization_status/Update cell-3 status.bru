@@ -1,0 +1,24 @@
+meta {
+  name: Update cell-3 status
+  type: http
+  seq: 7
+}
+
+patch {
+  url: {{baseUrl}}/workflow-cells/{{cell-3-uuid}}/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "containerization_job": {
+      "status": "completed",
+      "conclusion": "failure"
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+}
