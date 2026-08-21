@@ -3,7 +3,7 @@
 set -e
 
 APP_PORT=${PORT:-8000}
-DEV_MODE=${DEV_MODE:false}
+DEV_MODE=${DEV_MODE:-false}
 
 cd "$(dirname "$0")"
 
