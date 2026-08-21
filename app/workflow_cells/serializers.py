@@ -144,9 +144,14 @@ class CellSerializer(BaseAssetSerializer, VersioningSerializerMixin):
             instance = parent_instance.__getattribute__(name).all()
         else:
             instance = parent_instance.__getattribute__(name)
-        serializer = serializer_class(instance, many=many)
         if data is not None:
-            instance = serializer.update(instance, data)
+            if instance is None:
+                serializer = serializer_class(data=data, many=many)
+                serializer.is_valid(raise_exception=True)
+                instance = serializer.save()
+            else:
+                serializer = serializer_class(instance, many=many)
+                instance = serializer.update(instance, data)
         return instance
 
     @staticmethod
