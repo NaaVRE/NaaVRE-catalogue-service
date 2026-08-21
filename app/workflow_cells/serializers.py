@@ -144,9 +144,14 @@ class CellSerializer(BaseAssetSerializer, VersioningSerializerMixin):
             instance = parent_instance.__getattribute__(name).all()
         else:
             instance = parent_instance.__getattribute__(name)
-        serializer = serializer_class(instance, many=many)
         if data is not None:
-            instance = serializer.update(instance, data)
+            if instance is None:
+                serializer = serializer_class(data=data, many=many)
+                serializer.is_valid(raise_exception=True)
+                instance = serializer.save()
+            else:
+                serializer = serializer_class(instance, many=many)
+                instance = serializer.update(instance, data)
         return instance
 
     @staticmethod
@@ -180,6 +185,23 @@ class CellSerializer(BaseAssetSerializer, VersioningSerializerMixin):
             for name, serializer_class in serializer_classes.items()
             }
         return instances
+
+    def validate(self, attrs):
+        # Enforce that either all or none of the containerization fields be set
+        keys = ['containerization_job', 'containerization_workflow_id']
+        # attrs contains the data being serialized; self.instance is the existing instance (None on create)
+        # A field is None when:
+        keys_are_null = [
+            # it is explicitly None in attrs
+            (key in attrs and attrs[key] is None)
+            # it is absent from, or null in, both attrs and self.instance
+            or ((attrs.get(key) is None) and (getattr(self.instance, key, None) is None))
+            for key in keys]
+        if not (all(keys_are_null) or not any(keys_are_null)):
+            raise serializers.ValidationError(
+                'containerization_job and containerization_workflow_id must all be set or all be null.'
+                )
+        return attrs
 
     def create(self, validated_data):
         nested_instances = self.extract_nested_instances(

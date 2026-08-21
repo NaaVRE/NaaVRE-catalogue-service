@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 
 from base_assets.models import BaseAsset, BaseAssetVersionsCollection, VersioningMixin
 
@@ -132,6 +133,7 @@ class Cell(BaseAsset, VersioningMixin):
         CellContainerizationJob, blank=True, null=True,
         on_delete=models.PROTECT,
         )
+    containerization_workflow_id = models.UUIDField(blank=True, null=True)
     dependencies = models.ManyToManyField(Dependency, blank=True)
     inputs = models.ManyToManyField(Input, blank=True)
     outputs = models.ManyToManyField(Output, blank=True)
@@ -150,6 +152,22 @@ class Cell(BaseAsset, VersioningMixin):
                    '/2934de123c74316dc45fe84d340a7ca6914b8bc1/my-cell-1)'),
         )
     is_draft = models.BooleanField(default=False)
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                name="workflow_cell_containerization_job_and_workflow_null_together",
+                condition=(
+                    (
+                        Q(containerization_job__isnull=True) &
+                        Q(containerization_workflow_id__isnull=True)
+                    ) | (
+                        Q(containerization_job__isnull=False) &
+                        Q(containerization_workflow_id__isnull=False)
+                    )
+                ),
+            )
+        ]
 
     def __str__(self):
         return f'{super().__str__()} (v{self.version})'

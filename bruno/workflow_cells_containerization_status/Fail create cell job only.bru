@@ -1,0 +1,30 @@
+meta {
+  name: Fail create cell job only
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/workflow-cells/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "virtual_lab": "test-virtual-lab-1",
+    "title": "cell-fail",
+    "container_image": "image",
+    "containerization_job": {
+      "html_url": "https://example.com/",
+      "status": "in_progress",
+      "conclusion": null
+    }
+  }
+}
+
+tests {
+  test("Status code", function () {
+    expect(res.getStatus()).to.equal(400);
+  });
+}

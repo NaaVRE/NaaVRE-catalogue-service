@@ -1,7 +1,7 @@
 meta {
-  name: Update cell-3 status
+  name: Fail update cell-3 workflow null
   type: http
-  seq: 9
+  seq: 10
 }
 
 patch {
@@ -12,16 +12,13 @@ patch {
 
 body:json {
   {
-    "containerization_job": {
-      "status": "completed",
-      "conclusion": "failure"
-    }
+    "containerization_workflow_id": null
   }
 }
 
 tests {
   test("Status code", function () {
-    expect(res.getStatus()).to.equal(200);
+    expect(res.getStatus()).to.equal(400);
   });
 }
 
