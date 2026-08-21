@@ -1,0 +1,31 @@
+meta {
+  name: Fail update cell-1 job only
+  type: http
+  seq: 13
+}
+
+patch {
+  url: {{baseUrl}}/workflow-cells/{{cell-1-uuid}}/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "containerization_job": {
+      "html_url": "https://example.com/",
+      "status": "in_progress",
+      "conclusion": null
+    }
+  }
+}
+
+tests {
+  test("Status code", function () {
+    expect(res.getStatus()).to.equal(400);
+  });
+}
+
+settings {
+  encodeUrl: true
+}

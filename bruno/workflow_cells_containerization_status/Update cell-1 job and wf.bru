@@ -1,0 +1,32 @@
+meta {
+  name: Update cell-1 job and wf
+  type: http
+  seq: 15
+}
+
+patch {
+  url: {{baseUrl}}/workflow-cells/{{cell-1-uuid}}/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "containerization_job": {
+      "html_url": "https://example.com/",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "containerization_workflow_id": "b31bb840-124a-42ec-85ec-972e9d23de45"
+  }
+}
+
+tests {
+  test("Status code", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+}
+
+settings {
+  encodeUrl: true
+}
