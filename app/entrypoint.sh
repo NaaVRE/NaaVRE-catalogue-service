@@ -3,7 +3,8 @@
 set -e
 
 APP_PORT=${PORT:-8000}
-DEV_MODE=${DEV_MODE:false}
+DEV_MODE=${DEV_MODE:-false}
+LOAD_FIXTURES=${LOAD_FIXTURES:-false}
 
 cd "$(dirname "$0")"
 
@@ -12,7 +13,7 @@ python manage.py wait_for_database
 python manage.py wait_for_storage
 $DEV_MODE && python manage.py makemigrations
 python manage.py migrate
-$DEV_MODE && python manage.py loaddata fixtures.json
+($DEV_MODE || $LOAD_FIXTURES) && python manage.py loaddata fixtures.json
 python manage.py createsuperuser --no-input || echo
 python manage.py create_serviceaccount naavre-environment-sa \
   -p binder_environments.binderenvironment.add_binderenvironment \
