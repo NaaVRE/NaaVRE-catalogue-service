@@ -134,6 +134,7 @@ conf:
     superuser_email: ""
     superuser_username: ""
     superuser_password: ""
+    naavre_environment_sa_token: ""
   s3:
     # S3-compatible object storage configuration.
     # The key should grant permission for:
