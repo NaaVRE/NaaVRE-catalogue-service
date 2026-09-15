@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "@usebruno/cli": ">=3.5.1"
+    "@usebruno/cli": ">=4.1.0"
   }
 }
