@@ -20,3 +20,8 @@ updates:
     commit-message:
     # Prefix all commit messages with "[pip] " (no colon, but a trailing whitespace)
       prefix: "[pip] "
+    groups:
+      boto:
+        patterns:
+          - "botocore"
+          - "boto3-stubs*"
