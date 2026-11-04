@@ -8,28 +8,21 @@ services:
     environment:
       POSTGRES_PASSWORD: fake-postgres-password
 
+
   s3:
-    image: quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z
-    command: ["server", "/data", "--console-address", ":9001"]
+    image: chrislusf/seaweedfs:4.52
+    network_mode: host
     ports:
       - "127.0.0.1:9000:9000"
       - "127.0.0.1:9001:9001"
     env_file:
       - s3.env
+    entrypoint: ["sh", "-e", "/s3-entrypoint.sh"]
+    volumes:
+      - ./s3-entrypoint.sh:/s3-entrypoint.sh:ro
     healthcheck:
-      test: ["CMD", "mc", "ready", "local"]
+      # Healthy once the S3 API is up and the bucket has been created
+      test: ["CMD-SHELL", "curl -fs http://127.0.0.1:9000/healthz && curl -fs -o /dev/null http://127.0.0.1:9002/buckets/$${BUCKET_NAME}/"]
       interval: 5s
       timeout: 5s
       retries: 5
-
-  configure-s3:
-    image: quay.io/minio/mc:RELEASE.2025-08-13T08-35-41Z
-    depends_on:
-      s3:
-        condition: service_healthy
-    env_file:
-      - s3.env
-    entrypoint: ["bash", "-e"]
-    command: "/configure-s3.sh"
-    volumes:
-      - ./configure-s3.sh:/configure-s3.sh
