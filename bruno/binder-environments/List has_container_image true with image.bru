@@ -1,0 +1,32 @@
+meta {
+  name: List has_container_image true with image
+  type: http
+  seq: 15
+}
+
+get {
+  url: {{baseUrl}}/binder-environments/?binder_ref={{binder_ref}}&has_container_image=true
+  body: none
+  auth: apikey
+}
+
+params:query {
+  binder_ref: {{binder_ref}}
+  has_container_image: true
+}
+
+auth:apikey {
+  key: Authorization
+  value: Token {{saToken}}
+  placement: header
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Count is 1", function () {
+      expect(res.getBody().count).to.equal(1);
+  });
+}
