@@ -1,7 +1,7 @@
 meta {
   name: Partial update
   type: http
-  seq: 11
+  seq: 13
 }
 
 patch {
@@ -18,7 +18,8 @@ auth:apikey {
 
 body:json {
   {
-    "pre_pull": true
+    "pre_pull": true,
+    "container_image": "example.org/image:latest"
   }
 }
 
