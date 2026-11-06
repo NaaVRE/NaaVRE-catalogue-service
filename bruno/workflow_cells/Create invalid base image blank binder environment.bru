@@ -1,0 +1,39 @@
+meta {
+  name: Create invalid base image blank binder environment
+  type: http
+  seq: 39
+}
+
+post {
+  url: {{baseUrl}}/workflow-cells/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+body:json {
+  {
+    "virtual_lab": "test-virtual-lab-1",
+    "title": "test-cell-binder-environment",
+    "description": "",
+    "template_format": "v1",
+    "container_image": "test-image-binder-environment",
+    "base_container_image": {
+      "binder_environment": ""
+    },
+    "kernel": "",
+    "source_url": ""
+  }
+}
+
+tests {
+  test("Status code is 400", function () {
+    expect(res.getStatus()).to.equal(400);
+  });
+  test("Error is reported on base_container_image", function () {
+    expect(res.getBody()).to.have.property("base_container_image");
+  });
+}

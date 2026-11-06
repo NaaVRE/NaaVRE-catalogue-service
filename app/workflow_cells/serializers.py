@@ -11,9 +11,56 @@ from . import models
 
 
 class BaseImageSerializer(serializers.ModelSerializer):
+    """ Base image of a cell, in one of two shapes:
+
+    - flavor image: {"build": str, "runtime": str}
+    - binder environment image: {"binder_environment": str}
+
+    On write, exactly one shape must be provided, with non-empty values.
+    On read, only the keys of the shape in use are returned (existing rows
+    with empty build and runtime are returned as a flavor image).
+    """
+    FLAVOR_FIELDS = ('build', 'runtime')
+    BINDER_FIELDS = ('binder_environment',)
+
     class Meta:
         model = models.BaseImage
-        fields = ['build', 'runtime']
+        fields = ['build', 'runtime', 'binder_environment']
+
+    def to_internal_value(self, data):
+        if isinstance(data, dict):
+            unknown_keys = sorted(set(data) - set(self.fields))
+            if unknown_keys:
+                raise serializers.ValidationError(
+                    {key: ['Unknown field.'] for key in unknown_keys}
+                    )
+        return super().to_internal_value(data)
+
+    def validate(self, attrs):
+        is_flavor = (
+            all(attrs.get(f) for f in self.FLAVOR_FIELDS)
+            and not any(attrs.get(f) for f in self.BINDER_FIELDS)
+            )
+        is_binder_environment = (
+            all(attrs.get(f) for f in self.BINDER_FIELDS)
+            and not any(attrs.get(f) for f in self.FLAVOR_FIELDS)
+            )
+        if not (is_flavor or is_binder_environment):
+            raise serializers.ValidationError(
+                'base_container_image must be either {"build": str, '
+                '"runtime": str} or {"binder_environment": str}, with '
+                'non-empty values.'
+                )
+        # Specify all fields to avoid leaving stale values set when switching format on an update.
+        return {f: attrs.get(f, '') for f in self.Meta.fields}
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if instance.binder_environment:
+            keys = self.BINDER_FIELDS
+        else:
+            keys = self.FLAVOR_FIELDS
+        return {key: data[key] for key in keys}
 
 
 class CellContainerizationJobSerializer(serializers.ModelSerializer):

@@ -1,0 +1,32 @@
+meta {
+  name: Partial update flavor base image to binder environment
+  type: http
+  seq: 34
+}
+
+patch {
+  url: {{baseUrl}}/workflow-cells/{{binderEnvironmentCellUUID}}/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+body:json {
+  {
+    "base_container_image": {
+      "binder_environment": "ghcr.io/naavre/vl-openlab:abc123"
+    }
+  }
+}
+
+tests {
+  test("Status code is 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+  test("base_container_image is valid", function () {
+    expect(res.getBody().base_container_image).to.deep.equal({"binder_environment": "ghcr.io/naavre/vl-openlab:abc123"});
+  });
+}

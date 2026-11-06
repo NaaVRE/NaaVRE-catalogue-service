@@ -1,0 +1,33 @@
+meta {
+  name: Partial update binder environment base image to flavor
+  type: http
+  seq: 32
+}
+
+patch {
+  url: {{baseUrl}}/workflow-cells/{{binderEnvironmentCellUUID}}/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+body:json {
+  {
+    "base_container_image": {
+      "build": "test-build-binder-environment",
+      "runtime": "test-runtime-binder-environment"
+    }
+  }
+}
+
+tests {
+  test("Status code is 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+  test("base_container_image is valid", function () {
+    expect(res.getBody().base_container_image).to.deep.equal({"build": "test-build-binder-environment", "runtime": "test-runtime-binder-environment"});
+  });
+}
