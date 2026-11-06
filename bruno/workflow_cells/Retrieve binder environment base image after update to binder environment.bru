@@ -1,0 +1,24 @@
+meta {
+  name: Retrieve binder environment base image after update to binder environment
+  type: http
+  seq: 35
+}
+
+get {
+  url: {{baseUrl}}/workflow-cells/{{binderEnvironmentCellUUID}}/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+tests {
+  test("Status code is 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+  test("base_container_image is valid", function () {
+    expect(res.getBody().base_container_image).to.deep.equal({"binder_environment": "ghcr.io/naavre/vl-openlab:abc123"});
+  });
+}

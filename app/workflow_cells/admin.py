@@ -12,6 +12,7 @@ class BaseImageAdmin(admin.ModelAdmin):
     list_display = [
         "build",
         "runtime",
+        "binder_environment",
         ]
 
 

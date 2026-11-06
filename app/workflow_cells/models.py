@@ -7,16 +7,40 @@ from base_assets.models import BaseAsset, BaseAssetVersionsCollection, Versionin
 class BaseImage(models.Model):
     build = models.CharField(
         max_length=384, blank=True,
-        help_text=('Build stage base image (eg: '
-                   'ghcr.io/qcdis/naavre/naavre-cell-build-python:v0.18)'),
+        help_text=('Flavor build stage base image (eg: '
+                   'ghcr.io/qcdis/naavre/naavre-cell-build-python:v0.18). '
+                   'Must be set together with runtime.'),
         )
     runtime = models.CharField(
         max_length=384, blank=True,
-        help_text=('Runtime stage base image (eg: '
-                   'ghcr.io/qcdis/naavre/naavre-cell-runtime-python:v0.18)'),
+        help_text=('Flavor runtime stage base image (eg: '
+                   'ghcr.io/qcdis/naavre/naavre-cell-runtime-python:v0.18). '
+                   'Must be set together with build.'),
+        )
+    binder_environment = models.CharField(
+        max_length=384, blank=True,
+        help_text=('Binder environment image (eg: '
+                   'ghcr.io/naavre/binder-builds/naavre-2dvl-2dopenlab-abc:def). '
+                   'Mutually exclusive with build and runtime.'),
         )
 
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                name='workflow_cells_baseimage_flavor_or_binder_environment',
+                condition=(
+                    Q(binder_environment='')
+                    | (Q(build='') & Q(runtime=''))
+                    ),
+                violation_error_message=(
+                    'Set either build and runtime (for a flavor), or binder_environment.'
+                    ),
+                )
+            ]
+
     def __str__(self):
+        if self.binder_environment:
+            return f'{self.binder_environment}'
         return f'{self.build}, {self.runtime}'
 
 
