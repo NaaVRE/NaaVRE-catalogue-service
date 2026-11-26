@@ -1,0 +1,21 @@
+meta {
+  name: Delete null base image empty
+  type: http
+  seq: 45
+}
+
+delete {
+  url: {{baseUrl}}/workflow-cells/{{nullBaseImageEmptyCellUUID}}/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+tests {
+  test("Status code is 204", function () {
+    expect(res.getStatus()).to.equal(204);
+  });
+}

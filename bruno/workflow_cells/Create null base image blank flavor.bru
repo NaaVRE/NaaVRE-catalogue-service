@@ -30,6 +30,16 @@ body:json {
   }
 }
 
+script:post-response {
+  try {
+    const uuid = res.getBody().url.replace(/.*\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/$/, "$1")
+    bru.setVar('nullBaseImageBlankFlavorCellUUID', uuid)
+  }
+  catch (e) {
+    console.log(e)
+  }
+}
+
 tests {
   test("Status code is 201", function () {
     expect(res.getStatus()).to.equal(201);
