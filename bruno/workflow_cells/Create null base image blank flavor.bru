@@ -1,7 +1,7 @@
 meta {
-  name: Create invalid base image empty
+  name: Create null base image blank flavor
   type: http
-  seq: 36
+  seq: 40
 }
 
 post {
@@ -21,17 +21,20 @@ body:json {
     "description": "",
     "template_format": "v1",
     "container_image": "test-image-binder-environment",
-    "base_container_image": {},
+    "base_container_image": {
+      "build": "",
+      "runtime": ""
+    },
     "kernel": "",
     "source_url": ""
   }
 }
 
 tests {
-  test("Status code is 400", function () {
-    expect(res.getStatus()).to.equal(400);
+  test("Status code is 201", function () {
+    expect(res.getStatus()).to.equal(201);
   });
-  test("Error is reported on base_container_image", function () {
-    expect(res.getBody()).to.have.property("base_container_image");
+  test("base_container_image is null", function () {
+    expect(res.getBody().base_container_image).to.equal(null);
   });
 }
