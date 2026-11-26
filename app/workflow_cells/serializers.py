@@ -10,6 +10,7 @@ from base_assets.serializers import (
     )
 from . import models
 
+
 class BaseImageSerializer(serializers.ModelSerializer):
     """ Base image of a cell, in one of two shapes:
 
