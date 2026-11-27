@@ -1,0 +1,21 @@
+meta {
+  name: Delete null base image blank binder environment
+  type: http
+  seq: 49
+}
+
+delete {
+  url: {{baseUrl}}/workflow-cells/{{nullBaseImageBlankBinderEnvironmentCellUUID}}/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+tests {
+  test("Status code is 204", function () {
+    expect(res.getStatus()).to.equal(204);
+  });
+}

@@ -1,6 +1,7 @@
 import hashlib
 
 from rest_framework import serializers
+from rest_framework.fields import empty
 from rest_framework.renderers import JSONRenderer
 
 from base_assets.serializers import (
@@ -16,7 +17,8 @@ class BaseImageSerializer(serializers.ModelSerializer):
     - flavor image: {"build": str, "runtime": str}
     - binder environment image: {"binder_environment": str}
 
-    On write, exactly one shape must be provided, with non-empty values.
+    On write, exactly one shape must be provided. If the payload is empty,
+    or if the shape has empty values, it is parsed as None (no base image).
     On read, only the keys of the shape in use are returned (existing rows
     with empty build and runtime are returned as a flavor image).
     """
@@ -36,23 +38,52 @@ class BaseImageSerializer(serializers.ModelSerializer):
                     )
         return super().to_internal_value(data)
 
+    def run_validation(self, data=empty):
+        # validate() cannot return None (DRF asserts against it), so it
+        # returns {} to signal a null base image, which we convert here.
+        validated_data = super().run_validation(data)
+        if validated_data == {}:
+            return None
+        return validated_data
+
     def validate(self, attrs):
-        is_flavor = (
-            all(attrs.get(f) for f in self.FLAVOR_FIELDS)
-            and not any(attrs.get(f) for f in self.BINDER_FIELDS)
+        # If no attrs are present, return {}
+        if not attrs:
+            return {}
+        has_flavor_attrs = (
+            all(f in attrs for f in self.FLAVOR_FIELDS)
+            and not any(f in attrs for f in self.BINDER_FIELDS)
             )
-        is_binder_environment = (
-            all(attrs.get(f) for f in self.BINDER_FIELDS)
-            and not any(attrs.get(f) for f in self.FLAVOR_FIELDS)
+        has_binder_environment_attrs = (
+            all(f in attrs for f in self.BINDER_FIELDS)
+            and not any(f in attrs for f in self.FLAVOR_FIELDS)
             )
-        if not (is_flavor or is_binder_environment):
+        # Either build and runtime, or binder_environment must be present
+        if not (has_flavor_attrs or has_binder_environment_attrs):
             raise serializers.ValidationError(
-                'base_container_image must be either {"build": str, '
-                '"runtime": str} or {"binder_environment": str}, with '
-                'non-empty values.'
+                "base_container_image must contain either 'build' and"
+                " 'runtime', or 'binder_environment'"
                 )
-        # Specify all fields to avoid leaving stale values set when switching format on an update.
-        return {f: attrs.get(f, '') for f in self.Meta.fields}
+        # If all attrs have empty values, return {}
+        if not any(attrs.values()):
+            return {}
+        # If some attrs have empty values, raise
+        if not all(attrs.values()):
+            raise serializers.ValidationError(
+                "base_container_image fields must be all set or all empty"
+                )
+        return attrs
+
+    def _with_all_fields(self, validated_data):
+        # Specify all fields to avoid leaving stale values set when switching
+        # format on an update.
+        return {f: validated_data.get(f, '') for f in self.Meta.fields}
+
+    def create(self, validated_data):
+        return super().create(self._with_all_fields(validated_data))
+
+    def update(self, instance, validated_data):
+        return super().update(instance, self._with_all_fields(validated_data))
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

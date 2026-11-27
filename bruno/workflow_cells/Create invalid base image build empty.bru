@@ -1,7 +1,7 @@
 meta {
-  name: Create invalid base image empty
+  name: Create invalid base image build empty
   type: http
-  seq: 36
+  seq: 41
 }
 
 post {
@@ -21,7 +21,10 @@ body:json {
     "description": "",
     "template_format": "v1",
     "container_image": "test-image-binder-environment",
-    "base_container_image": {},
+    "base_container_image": {
+      "build": "",
+      "runtime": "test-runtime"
+    },
     "kernel": "",
     "source_url": ""
   }

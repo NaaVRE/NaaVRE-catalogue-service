@@ -1,0 +1,50 @@
+meta {
+  name: Create null base image blank flavor
+  type: http
+  seq: 43
+}
+
+post {
+  url: {{baseUrl}}/workflow-cells/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+body:json {
+  {
+    "virtual_lab": "test-virtual-lab-1",
+    "title": "test-cell-binder-environment",
+    "description": "",
+    "template_format": "v1",
+    "container_image": "test-image-binder-environment",
+    "base_container_image": {
+      "build": "",
+      "runtime": ""
+    },
+    "kernel": "",
+    "source_url": ""
+  }
+}
+
+script:post-response {
+  try {
+    const uuid = res.getBody().url.replace(/.*\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/$/, "$1")
+    bru.setVar('nullBaseImageBlankFlavorCellUUID', uuid)
+  }
+  catch (e) {
+    console.log(e)
+  }
+}
+
+tests {
+  test("Status code is 201", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+  test("base_container_image is null", function () {
+    expect(res.getBody().base_container_image).to.equal(null);
+  });
+}

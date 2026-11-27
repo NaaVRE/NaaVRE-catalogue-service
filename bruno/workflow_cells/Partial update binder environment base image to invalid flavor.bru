@@ -1,0 +1,30 @@
+meta {
+  name: Partial update binder environment base image to invalid flavor
+  type: http
+  seq: 33
+}
+
+patch {
+  url: {{baseUrl}}/workflow-cells/{{binderEnvironmentCellUUID}}/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ourJWT}}
+}
+
+body:json {
+  {
+    "base_container_image": {
+      "build": "test-build-binder-environment",
+      "runtime": ""
+    }
+  }
+}
+
+tests {
+  test("Status code is 400", function () {
+    expect(res.getStatus()).to.equal(400);
+  });
+}
