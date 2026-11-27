@@ -38,39 +38,24 @@ class BaseImageSerializer(serializers.ModelSerializer):
                     )
         return super().to_internal_value(data)
 
-    def run_validation(self, data=empty):
-        # validate() cannot return None (DRF asserts against it), so it
-        # returns {} to signal a null base image, which we convert here.
-        validated_data = super().run_validation(data)
-        if validated_data == {}:
-            return None
-        return validated_data
-
     def validate(self, attrs):
         # If no attrs are present, return {}
         if not attrs:
             return {}
-        has_flavor_attrs = (
-            all(f in attrs for f in self.FLAVOR_FIELDS)
-            and not any(f in attrs for f in self.BINDER_FIELDS)
-            )
-        has_binder_environment_attrs = (
-            all(f in attrs for f in self.BINDER_FIELDS)
-            and not any(f in attrs for f in self.FLAVOR_FIELDS)
-            )
-        # Either build and runtime, or binder_environment must be present
-        if not (has_flavor_attrs or has_binder_environment_attrs):
+        # Enforce shape
+        is_flavors_shape = set(attrs) == set(self.FLAVOR_FIELDS)
+        is_binder_shape = set(attrs) == set(self.BINDER_FIELDS)
+        if not (is_flavors_shape or is_binder_shape):
             raise serializers.ValidationError(
                 "base_container_image must contain either 'build' and"
                 " 'runtime', or 'binder_environment'"
                 )
-        # If all attrs have empty values, return {}
-        if not any(attrs.values()):
-            return {}
-        # If some attrs have empty values, raise
-        if not all(attrs.values()):
+        # Enforce consistent truthy-ness
+        any_attrs_truthy = any(attrs.values())
+        all_attrs_truthy = all(attrs.values())
+        if any_attrs_truthy and not all_attrs_truthy:
             raise serializers.ValidationError(
-                "base_container_image fields must be all set or all empty"
+                "base_container_image either all or none of the fields must be truthy"
                 )
         return attrs
 
