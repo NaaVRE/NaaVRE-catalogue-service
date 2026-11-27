@@ -20,7 +20,12 @@ tests {
   });
   test("JSON response is valid", function () {
       var jsonData = res.getBody();
-      expect(jsonData).to.deep.include({
+      const normalized = {
+        ...jsonData,
+        show_in_virtual_labs: [...jsonData.show_in_virtual_labs].sort(),
+        check_in_virtual_labs: [...jsonData.check_in_virtual_labs].sort(),
+      };
+      expect(normalized).to.deep.include({
         // "url": "{{baseUrl}}/sharing-scopes/test-community-1/",
         "title": "Test Community 1",
         "label": "community",

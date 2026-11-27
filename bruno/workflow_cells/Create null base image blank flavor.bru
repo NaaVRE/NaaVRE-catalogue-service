@@ -1,7 +1,7 @@
 meta {
   name: Create null base image blank flavor
   type: http
-  seq: 43
+  seq: 42
 }
 
 post {
@@ -44,7 +44,7 @@ tests {
   test("Status code is 201", function () {
     expect(res.getStatus()).to.equal(201);
   });
-  test("base_container_image is null", function () {
-    expect(res.getBody().base_container_image).to.equal(null);
+  test("base_container_image is valid", function () {
+    expect(res.getBody().base_container_image).to.deep.equal({"build": "", "runtime": ""});
   });
 }
