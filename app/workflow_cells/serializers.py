@@ -159,8 +159,8 @@ class SecretSerializer(BaseVariableSerializer):
 
 
 class CellSerializer(BaseAssetSerializer, VersioningSerializerMixin):
-    base_container_image = BaseImageSerializer(required=False)
-    containerization_job = CellContainerizationJobSerializer(required=False)
+    base_container_image = BaseImageSerializer(required=False, allow_null=True)
+    containerization_job = CellContainerizationJobSerializer(required=False, allow_null=True)
     dependencies = DependencySerializer(many=True, required=False)
     inputs = InputSerializer(many=True, required=False)
     outputs = OutputSerializer(many=True, required=False)
