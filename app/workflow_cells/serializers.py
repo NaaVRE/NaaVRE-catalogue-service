@@ -61,16 +61,17 @@ class BaseImageSerializer(serializers.ModelSerializer):
         # Either build and runtime, or binder_environment must be present
         if not (has_flavor_attrs or has_binder_environment_attrs):
             raise serializers.ValidationError(
-                "base_container_image must contain either 'build' and "
+                "base_container_image must contain either 'build' and"
                 " 'runtime', or 'binder_environment'"
                 )
-        # If any attr has empty or null values, return {}
-        if has_flavor_attrs:
-            if not all(attrs.get(f) for f in self.FLAVOR_FIELDS):
-                return {}
-        if has_binder_environment_attrs:
-            if not all(attrs.get(f) for f in self.BINDER_FIELDS):
-                return {}
+        # If all attrs have empty values, return {}
+        if not any(attrs.values()):
+            return {}
+        # If some attrs have empty values, raise
+        if not all(attrs.values()):
+            raise serializers.ValidationError(
+                "base_container_image fields must be all set or all empty"
+                )
         return attrs
 
     def _with_all_fields(self, validated_data):
